@@ -120,7 +120,12 @@ CASE eState OF
 END_CASE
 
 xExecute  := (eState = UST_RUNNING);
-xHolding  := (eState = UST_HOLDING) OR (eState = UST_HELD);
+(* RESTARTING counts as holding. It lasts one scan, and the phase has not
+   resumed yet, so the phase engine must keep its state through it. Leaving it
+   out of both outputs gives the engine one scan in which it is neither
+   executing nor holding, which it reads as the phase having ended; the next
+   scan then looks like a fresh start and the phase begins again from zero. *)
+xHolding  := (eState = UST_HOLDING) OR (eState = UST_HELD) OR (eState = UST_RESTARTING);
 xAborting := (eState = UST_ABORTING);
 xActive   := (eState <> UST_IDLE) AND (eState <> UST_COMPLETE) AND (eState <> UST_ABORTED);
 
