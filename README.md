@@ -315,8 +315,14 @@ I/O map check, one re-run of a committed cell of the sweep with the batch-record
 chain verified and a live start of the Modbus and HTTP servers that drives a
 cycle and shuts itself down. The sweep is deterministic (seeded noise, no
 wall-clock time in any output), so a re-run has to land on the committed
-numbers or the build fails. One job, no dependencies to install, under ten
-minutes.
+numbers or the build fails.
+
+Everything that needs the full picture is in one job, because with nothing to
+install a second job would cost more in runner start-up than it saved in wall
+clock: 3.8 minutes for the lot, of which the twenty-three end-to-end cycles
+are 2.8. Two one-job matrix legs then re-run the unit tests on Python 3.9 and
+3.13, gated behind the first job so a real failure only costs one job's worth
+of minutes. A superseded push is cancelled rather than finished.
 
 The fault cases are the ones a commissioning engineer would try with the skid
 in front of them: pump trip mid-wash, emergency stop, loss of the circuit
