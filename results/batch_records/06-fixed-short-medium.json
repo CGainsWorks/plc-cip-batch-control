@@ -1,0 +1,152 @@
+{
+  "alarms": [],
+  "batch_id": 1,
+  "circuit": "TANK-CIRCUIT-A",
+  "consumption": {
+    "acid_concentrate_l": 13.6,
+    "caustic_concentrate_l": 36.6,
+    "effluent_l": 1641.9,
+    "fresh_water_l": 1908.3,
+    "recovered_water_l": 524.4,
+    "steam_energy_kwh": 96.724
+  },
+  "cycle": {
+    "aborted": false,
+    "completed": true,
+    "cycle_time_s": 2027.8,
+    "fail_code": "NONE",
+    "scans": 10152
+  },
+  "independent_check": {
+    "breakdown_g_m2": {
+      "bound": 0.0194,
+      "loose": 0.0,
+      "mineral": 0.0235
+    },
+    "chemical_limit_ppm": 50.0,
+    "chemical_within_limit": false,
+    "note": "Residual soil is tracked by the plant model and measured by no instrument on the skid. It is here to test the controller's release decision, not to inform it.",
+    "residual_chemical_ppm": 291.22,
+    "residual_limit_g_m2": 1.0,
+    "residual_soil_g_m2": 0.0429,
+    "soil_within_limit": true
+  },
+  "notes": [
+    "simulated run 6 of the experiment sweep"
+  ],
+  "phases": [
+    {
+      "chemical_l": 0.0,
+      "duration_s": 180.4,
+      "end_conductivity_ms_cm": 0.8302,
+      "endpoint": "verified hold",
+      "energy_kwh": 0.0,
+      "fail_code": "NONE",
+      "hold_achieved_s": 150.0,
+      "hold_required_s": 150.0,
+      "index": 1,
+      "max_temp_c": 36.64,
+      "mean_conc_pct": 0.0,
+      "min_flow_m3h": 13.43,
+      "min_temp_c": 23.24,
+      "pass": true,
+      "phase": "PRE_RINSE",
+      "water_l": 789.7
+    },
+    {
+      "chemical_l": 36.6,
+      "duration_s": 813.4,
+      "end_conductivity_ms_cm": 0.0137,
+      "endpoint": "verified hold",
+      "energy_kwh": 52.12,
+      "fail_code": "NONE",
+      "hold_achieved_s": 300.2,
+      "hold_required_s": 300.0,
+      "index": 2,
+      "max_temp_c": 79.39,
+      "mean_conc_pct": 2.005,
+      "min_flow_m3h": 17.81,
+      "min_temp_c": 57.23,
+      "pass": true,
+      "phase": "CAUSTIC_WASH",
+      "water_l": 0.0
+    },
+    {
+      "chemical_l": 0.0,
+      "duration_s": 180.6,
+      "end_conductivity_ms_cm": 11.3268,
+      "endpoint": "verified hold",
+      "energy_kwh": 0.0,
+      "fail_code": "NONE",
+      "hold_achieved_s": 150.0,
+      "hold_required_s": 150.0,
+      "index": 3,
+      "max_temp_c": 68.68,
+      "mean_conc_pct": 0.0,
+      "min_flow_m3h": 13.8,
+      "min_temp_c": 18.67,
+      "pass": true,
+      "phase": "INTERMEDIATE_RINSE",
+      "water_l": 822.8
+    },
+    {
+      "chemical_l": 13.6,
+      "duration_s": 672.2,
+      "end_conductivity_ms_cm": 0.0002,
+      "endpoint": "verified hold",
+      "energy_kwh": 44.604,
+      "fail_code": "NONE",
+      "hold_achieved_s": 180.2,
+      "hold_required_s": 180.0,
+      "index": 4,
+      "max_temp_c": 62.86,
+      "mean_conc_pct": 1.001,
+      "min_flow_m3h": 17.81,
+      "min_temp_c": 45.58,
+      "pass": true,
+      "phase": "ACID_WASH",
+      "water_l": 0.0
+    },
+    {
+      "chemical_l": 0.0,
+      "duration_s": 180.2,
+      "end_conductivity_ms_cm": 5.1037,
+      "endpoint": "verified hold",
+      "energy_kwh": 0.0,
+      "fail_code": "NONE",
+      "hold_achieved_s": 150.0,
+      "hold_required_s": 150.0,
+      "index": 5,
+      "max_temp_c": 53.33,
+      "mean_conc_pct": 0.0,
+      "min_flow_m3h": 13.77,
+      "min_temp_c": 16.98,
+      "pass": true,
+      "phase": "FINAL_RINSE",
+      "water_l": 820.3
+    }
+  ],
+  "previous_signature": "db8c130df6ea9c87b8b4eef18567206c3bbd0c8d8168968f1dfc2d1764d85526",
+  "recipe": {
+    "adaptive": false,
+    "caustic_conc_sp_pct": 2.0,
+    "caustic_hold_s": 300,
+    "caustic_temp_min_c": 70.0,
+    "description": "The conservative recipe with the holds and rinses trimmed to what a light soil needs. Cheaper per cycle and the reason a recipe change needs evidence.",
+    "name": "fixed-short",
+    "rinse_end_cond_ms_cm": 0.1,
+    "use_acid": true,
+    "use_sanitise": false
+  },
+  "release": {
+    "decision": "HELD",
+    "reasons": [
+      "final rinse did not reach the conductivity endpoint"
+    ],
+    "verified_clean": false
+  },
+  "schema": "cip-batch-record/1",
+  "signature": "de1997cb27ee23d95b02aa981b1ba4cc4ab8462d1d1ab241115ffb0b83b160c1",
+  "soil_scenario": "medium",
+  "unit": "CIP-01"
+}

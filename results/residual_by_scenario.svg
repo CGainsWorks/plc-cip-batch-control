@@ -1,0 +1,51 @@
+<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 900 420' width='900' height='420' role='img'>
+<rect width='900' height='420' fill='#ffffff'/>
+<text x='24' y='30' font-family='ui-sans-serif,-apple-system,Segoe UI,Helvetica,Arial,sans-serif' font-size='16' font-weight='600' fill='#1f2733'>Residual soil after the cycle, against the release limit</text>
+<text x='24' y='50' font-family='ui-sans-serif,-apple-system,Segoe UI,Helvetica,Arial,sans-serif' font-size='12' fill='#6b7684'>Measured by the plant model, not by the skid. The short fixed recipe is the cheap one; it is also the one that leaves soil behind.</text>
+<line x1='70' y1='360.0' x2='710' y2='360.0' stroke='#d8dee6' stroke-width='1'/>
+<text x='62' y='364.0' font-family='ui-sans-serif,-apple-system,Segoe UI,Helvetica,Arial,sans-serif' font-size='11' fill='#6b7684' text-anchor='end'>0</text>
+<line x1='70' y1='299.2' x2='710' y2='299.2' stroke='#d8dee6' stroke-width='1'/>
+<text x='62' y='303.2' font-family='ui-sans-serif,-apple-system,Segoe UI,Helvetica,Arial,sans-serif' font-size='11' fill='#6b7684' text-anchor='end'>0.05</text>
+<line x1='70' y1='238.4' x2='710' y2='238.4' stroke='#d8dee6' stroke-width='1'/>
+<text x='62' y='242.4' font-family='ui-sans-serif,-apple-system,Segoe UI,Helvetica,Arial,sans-serif' font-size='11' fill='#6b7684' text-anchor='end'>0.1</text>
+<line x1='70' y1='177.6' x2='710' y2='177.6' stroke='#d8dee6' stroke-width='1'/>
+<text x='62' y='181.6' font-family='ui-sans-serif,-apple-system,Segoe UI,Helvetica,Arial,sans-serif' font-size='11' fill='#6b7684' text-anchor='end'>0.15</text>
+<line x1='70' y1='116.9' x2='710' y2='116.9' stroke='#d8dee6' stroke-width='1'/>
+<text x='62' y='120.9' font-family='ui-sans-serif,-apple-system,Segoe UI,Helvetica,Arial,sans-serif' font-size='11' fill='#6b7684' text-anchor='end'>0.2</text>
+<rect x='92.4' y='359.1' width='34.6' height='0.9' fill='#2c6fbb' rx='2'/>
+<text x='109.7' y='354.1' font-family='ui-sans-serif,-apple-system,Segoe UI,Helvetica,Arial,sans-serif' font-size='10' fill='#1f2733' text-anchor='middle'>0.001</text>
+<rect x='130.8' y='343.2' width='34.6' height='16.8' fill='#c8582a' rx='2'/>
+<text x='148.1' y='338.2' font-family='ui-sans-serif,-apple-system,Segoe UI,Helvetica,Arial,sans-serif' font-size='10' fill='#1f2733' text-anchor='middle'>0.014</text>
+<rect x='169.2' y='359.1' width='34.6' height='0.9' fill='#3f8f5f' rx='2'/>
+<text x='186.5' y='354.1' font-family='ui-sans-serif,-apple-system,Segoe UI,Helvetica,Arial,sans-serif' font-size='10' fill='#1f2733' text-anchor='middle'>0.001</text>
+<text x='150.0' y='380' font-family='ui-sans-serif,-apple-system,Segoe UI,Helvetica,Arial,sans-serif' font-size='12' fill='#1f2733' text-anchor='middle'>light</text>
+<rect x='252.4' y='357.2' width='34.6' height='2.8' fill='#2c6fbb' rx='2'/>
+<text x='269.7' y='352.2' font-family='ui-sans-serif,-apple-system,Segoe UI,Helvetica,Arial,sans-serif' font-size='10' fill='#1f2733' text-anchor='middle'>0.002</text>
+<rect x='290.8' y='307.8' width='34.6' height='52.2' fill='#c8582a' rx='2'/>
+<text x='308.1' y='302.8' font-family='ui-sans-serif,-apple-system,Segoe UI,Helvetica,Arial,sans-serif' font-size='10' fill='#1f2733' text-anchor='middle'>0.043</text>
+<rect x='329.2' y='357.2' width='34.6' height='2.8' fill='#3f8f5f' rx='2'/>
+<text x='346.5' y='352.2' font-family='ui-sans-serif,-apple-system,Segoe UI,Helvetica,Arial,sans-serif' font-size='10' fill='#1f2733' text-anchor='middle'>0.002</text>
+<text x='310.0' y='380' font-family='ui-sans-serif,-apple-system,Segoe UI,Helvetica,Arial,sans-serif' font-size='12' fill='#1f2733' text-anchor='middle'>medium</text>
+<rect x='412.4' y='352.0' width='34.6' height='8.0' fill='#2c6fbb' rx='2'/>
+<text x='429.7' y='347.0' font-family='ui-sans-serif,-apple-system,Segoe UI,Helvetica,Arial,sans-serif' font-size='10' fill='#1f2733' text-anchor='middle'>0.007</text>
+<rect x='450.8' y='216.8' width='34.6' height='143.2' fill='#c8582a' rx='2'/>
+<text x='468.1' y='211.8' font-family='ui-sans-serif,-apple-system,Segoe UI,Helvetica,Arial,sans-serif' font-size='10' fill='#1f2733' text-anchor='middle'>0.118</text>
+<rect x='489.2' y='351.9' width='34.6' height='8.1' fill='#3f8f5f' rx='2'/>
+<text x='506.5' y='346.9' font-family='ui-sans-serif,-apple-system,Segoe UI,Helvetica,Arial,sans-serif' font-size='10' fill='#1f2733' text-anchor='middle'>0.007</text>
+<text x='470.0' y='380' font-family='ui-sans-serif,-apple-system,Segoe UI,Helvetica,Arial,sans-serif' font-size='12' fill='#1f2733' text-anchor='middle'>heavy</text>
+<rect x='572.4' y='345.7' width='34.6' height='14.3' fill='#2c6fbb' rx='2'/>
+<text x='589.7' y='340.7' font-family='ui-sans-serif,-apple-system,Segoe UI,Helvetica,Arial,sans-serif' font-size='10' fill='#1f2733' text-anchor='middle'>0.012</text>
+<rect x='610.8' y='109.6' width='34.6' height='250.4' fill='#c8582a' rx='2'/>
+<text x='628.1' y='104.6' font-family='ui-sans-serif,-apple-system,Segoe UI,Helvetica,Arial,sans-serif' font-size='10' fill='#1f2733' text-anchor='middle'>0.206</text>
+<rect x='649.2' y='345.8' width='34.6' height='14.2' fill='#3f8f5f' rx='2'/>
+<text x='666.5' y='340.8' font-family='ui-sans-serif,-apple-system,Segoe UI,Helvetica,Arial,sans-serif' font-size='10' fill='#1f2733' text-anchor='middle'>0.012</text>
+<text x='630.0' y='380' font-family='ui-sans-serif,-apple-system,Segoe UI,Helvetica,Arial,sans-serif' font-size='12' fill='#1f2733' text-anchor='middle'>worst</text>
+<rect x='726' y='70' width='14' height='10' fill='#2c6fbb' rx='2'/>
+<text x='746' y='79' font-family='ui-sans-serif,-apple-system,Segoe UI,Helvetica,Arial,sans-serif' font-size='11' fill='#1f2733'>fixed-conservative</text>
+<rect x='726' y='90' width='14' height='10' fill='#c8582a' rx='2'/>
+<text x='746' y='99' font-family='ui-sans-serif,-apple-system,Segoe UI,Helvetica,Arial,sans-serif' font-size='11' fill='#1f2733'>fixed-short</text>
+<rect x='726' y='110' width='14' height='10' fill='#3f8f5f' rx='2'/>
+<text x='746' y='119' font-family='ui-sans-serif,-apple-system,Segoe UI,Helvetica,Arial,sans-serif' font-size='11' fill='#1f2733'>adaptive</text>
+<line x1='70' y1='360.0' x2='710' y2='360.0' stroke='#5a6472' stroke-width='1.5'/>
+<text transform='translate(18,216) rotate(-90)' font-family='ui-sans-serif,-apple-system,Segoe UI,Helvetica,Arial,sans-serif' font-size='12' fill='#1f2733' text-anchor='middle'>g/m2 remaining</text>
+</svg>

@@ -1,0 +1,43 @@
+<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 900 270' width='900' height='270' role='img'>
+<rect width='900' height='270' fill='#ffffff'/>
+<text x='24' y='30' font-family='ui-sans-serif,-apple-system,Segoe UI,Helvetica,Arial,sans-serif' font-size='16' font-weight='600' fill='#1f2733'>Where the cycle time goes, heavy soil</text>
+<text x='24' y='50' font-family='ui-sans-serif,-apple-system,Segoe UI,Helvetica,Arial,sans-serif' font-size='12' fill='#6b7684'>Washes hold for their verified time in every recipe; only the rinses differ.</text>
+<text x='138' y='101.9' font-family='ui-sans-serif,-apple-system,Segoe UI,Helvetica,Arial,sans-serif' font-size='12' fill='#1f2733' text-anchor='end'>fixed-conservative</text>
+<rect x='150.0' y='85.9' width='73.2' height='22.9' fill='#4aa3a3' rx='2'/>
+<rect x='223.2' y='85.9' width='274.8' height='22.9' fill='#2c6fbb' rx='2'/>
+<rect x='498.0' y='85.9' width='86.5' height='22.9' fill='#8b5cb8' rx='2'/>
+<rect x='584.6' y='85.9' width='189.0' height='22.9' fill='#c8582a' rx='2'/>
+<rect x='773.5' y='85.9' width='86.5' height='22.9' fill='#3f8f5f' rx='2'/>
+<text x='868.0' y='101.9' font-family='ui-sans-serif,-apple-system,Segoe UI,Helvetica,Arial,sans-serif' font-size='11' fill='#6b7684'>53 min</text>
+<text x='138' y='145.9' font-family='ui-sans-serif,-apple-system,Segoe UI,Helvetica,Arial,sans-serif' font-size='12' fill='#1f2733' text-anchor='end'>fixed-short</text>
+<rect x='150.0' y='129.9' width='40.0' height='22.9' fill='#4aa3a3' rx='2'/>
+<rect x='190.0' y='129.9' width='180.1' height='22.9' fill='#2c6fbb' rx='2'/>
+<rect x='370.1' y='129.9' width='40.0' height='22.9' fill='#8b5cb8' rx='2'/>
+<rect x='410.1' y='129.9' width='148.6' height='22.9' fill='#c8582a' rx='2'/>
+<rect x='558.7' y='129.9' width='39.9' height='22.9' fill='#3f8f5f' rx='2'/>
+<text x='606.6' y='145.9' font-family='ui-sans-serif,-apple-system,Segoe UI,Helvetica,Arial,sans-serif' font-size='11' fill='#6b7684'>34 min</text>
+<text x='138' y='189.9' font-family='ui-sans-serif,-apple-system,Segoe UI,Helvetica,Arial,sans-serif' font-size='12' fill='#1f2733' text-anchor='end'>adaptive</text>
+<rect x='150.0' y='173.9' width='65.9' height='22.9' fill='#4aa3a3' rx='2'/>
+<rect x='215.9' y='173.9' width='274.5' height='22.9' fill='#2c6fbb' rx='2'/>
+<rect x='490.4' y='173.9' width='70.7' height='22.9' fill='#8b5cb8' rx='2'/>
+<rect x='561.1' y='173.9' width='188.9' height='22.9' fill='#c8582a' rx='2'/>
+<rect x='750.0' y='173.9' width='69.7' height='22.9' fill='#3f8f5f' rx='2'/>
+<text x='827.7' y='189.9' font-family='ui-sans-serif,-apple-system,Segoe UI,Helvetica,Arial,sans-serif' font-size='11' fill='#6b7684'>50 min</text>
+<text x='150.0' y='230.0' font-family='ui-sans-serif,-apple-system,Segoe UI,Helvetica,Arial,sans-serif' font-size='11' fill='#6b7684' text-anchor='middle'>0</text>
+<text x='282.9' y='230.0' font-family='ui-sans-serif,-apple-system,Segoe UI,Helvetica,Arial,sans-serif' font-size='11' fill='#6b7684' text-anchor='middle'>10</text>
+<text x='415.8' y='230.0' font-family='ui-sans-serif,-apple-system,Segoe UI,Helvetica,Arial,sans-serif' font-size='11' fill='#6b7684' text-anchor='middle'>20</text>
+<text x='548.7' y='230.0' font-family='ui-sans-serif,-apple-system,Segoe UI,Helvetica,Arial,sans-serif' font-size='11' fill='#6b7684' text-anchor='middle'>30</text>
+<text x='681.6' y='230.0' font-family='ui-sans-serif,-apple-system,Segoe UI,Helvetica,Arial,sans-serif' font-size='11' fill='#6b7684' text-anchor='middle'>40</text>
+<text x='814.5' y='230.0' font-family='ui-sans-serif,-apple-system,Segoe UI,Helvetica,Arial,sans-serif' font-size='11' fill='#6b7684' text-anchor='middle'>50</text>
+<text x='505' y='258' font-family='ui-sans-serif,-apple-system,Segoe UI,Helvetica,Arial,sans-serif' font-size='12' fill='#1f2733' text-anchor='middle'>minutes</text>
+<rect x='150.0' y='56' width='12' height='9' fill='#4aa3a3' rx='2'/>
+<text x='167.0' y='64' font-family='ui-sans-serif,-apple-system,Segoe UI,Helvetica,Arial,sans-serif' font-size='10' fill='#1f2733'>Pre Rinse</text>
+<rect x='292.0' y='56' width='12' height='9' fill='#2c6fbb' rx='2'/>
+<text x='309.0' y='64' font-family='ui-sans-serif,-apple-system,Segoe UI,Helvetica,Arial,sans-serif' font-size='10' fill='#1f2733'>Caustic Wash</text>
+<rect x='434.0' y='56' width='12' height='9' fill='#8b5cb8' rx='2'/>
+<text x='451.0' y='64' font-family='ui-sans-serif,-apple-system,Segoe UI,Helvetica,Arial,sans-serif' font-size='10' fill='#1f2733'>Intermediate Rinse</text>
+<rect x='576.0' y='56' width='12' height='9' fill='#c8582a' rx='2'/>
+<text x='593.0' y='64' font-family='ui-sans-serif,-apple-system,Segoe UI,Helvetica,Arial,sans-serif' font-size='10' fill='#1f2733'>Acid Wash</text>
+<rect x='718.0' y='56' width='12' height='9' fill='#3f8f5f' rx='2'/>
+<text x='735.0' y='64' font-family='ui-sans-serif,-apple-system,Segoe UI,Helvetica,Arial,sans-serif' font-size='10' fill='#1f2733'>Final Rinse</text>
+</svg>

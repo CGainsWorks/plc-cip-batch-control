@@ -1,0 +1,47 @@
+<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 900 420' width='900' height='420' role='img'>
+<rect width='900' height='420' fill='#ffffff'/>
+<text x='24' y='30' font-family='ui-sans-serif,-apple-system,Segoe UI,Helvetica,Arial,sans-serif' font-size='16' font-weight='600' fill='#1f2733'>Mains water per cycle</text>
+<text x='24' y='50' font-family='ui-sans-serif,-apple-system,Segoe UI,Helvetica,Arial,sans-serif' font-size='12' fill='#6b7684'>Lower is better. The adaptive recipe stops each rinse on the return conductivity instead of the clock.</text>
+<line x1='70' y1='360.0' x2='710' y2='360.0' stroke='#d8dee6' stroke-width='1'/>
+<text x='62' y='364.0' font-family='ui-sans-serif,-apple-system,Segoe UI,Helvetica,Arial,sans-serif' font-size='11' fill='#6b7684' text-anchor='end'>0</text>
+<line x1='70' y1='254.8' x2='710' y2='254.8' stroke='#d8dee6' stroke-width='1'/>
+<text x='62' y='258.8' font-family='ui-sans-serif,-apple-system,Segoe UI,Helvetica,Arial,sans-serif' font-size='11' fill='#6b7684' text-anchor='end'>2,000</text>
+<line x1='70' y1='149.6' x2='710' y2='149.6' stroke='#d8dee6' stroke-width='1'/>
+<text x='62' y='153.6' font-family='ui-sans-serif,-apple-system,Segoe UI,Helvetica,Arial,sans-serif' font-size='11' fill='#6b7684' text-anchor='end'>4,000</text>
+<rect x='92.4' y='109.6' width='34.6' height='250.4' fill='#2c6fbb' rx='2'/>
+<text x='109.7' y='104.6' font-family='ui-sans-serif,-apple-system,Segoe UI,Helvetica,Arial,sans-serif' font-size='10' fill='#1f2733' text-anchor='middle'>4,759</text>
+<rect x='130.8' y='259.8' width='34.6' height='100.2' fill='#c8582a' rx='2'/>
+<text x='148.1' y='254.8' font-family='ui-sans-serif,-apple-system,Segoe UI,Helvetica,Arial,sans-serif' font-size='10' fill='#1f2733' text-anchor='middle'>1,905</text>
+<rect x='169.2' y='184.5' width='34.6' height='175.5' fill='#3f8f5f' rx='2'/>
+<text x='186.5' y='179.5' font-family='ui-sans-serif,-apple-system,Segoe UI,Helvetica,Arial,sans-serif' font-size='10' fill='#1f2733' text-anchor='middle'>3,336</text>
+<text x='150.0' y='380' font-family='ui-sans-serif,-apple-system,Segoe UI,Helvetica,Arial,sans-serif' font-size='12' fill='#1f2733' text-anchor='middle'>light</text>
+<rect x='252.4' y='109.7' width='34.6' height='250.3' fill='#2c6fbb' rx='2'/>
+<text x='269.7' y='104.7' font-family='ui-sans-serif,-apple-system,Segoe UI,Helvetica,Arial,sans-serif' font-size='10' fill='#1f2733' text-anchor='middle'>4,758</text>
+<rect x='290.8' y='259.6' width='34.6' height='100.4' fill='#c8582a' rx='2'/>
+<text x='308.1' y='254.6' font-family='ui-sans-serif,-apple-system,Segoe UI,Helvetica,Arial,sans-serif' font-size='10' fill='#1f2733' text-anchor='middle'>1,908</text>
+<rect x='329.2' y='168.2' width='34.6' height='191.8' fill='#3f8f5f' rx='2'/>
+<text x='346.5' y='163.2' font-family='ui-sans-serif,-apple-system,Segoe UI,Helvetica,Arial,sans-serif' font-size='10' fill='#1f2733' text-anchor='middle'>3,645</text>
+<text x='310.0' y='380' font-family='ui-sans-serif,-apple-system,Segoe UI,Helvetica,Arial,sans-serif' font-size='12' fill='#1f2733' text-anchor='middle'>medium</text>
+<rect x='412.4' y='109.6' width='34.6' height='250.4' fill='#2c6fbb' rx='2'/>
+<text x='429.7' y='104.6' font-family='ui-sans-serif,-apple-system,Segoe UI,Helvetica,Arial,sans-serif' font-size='10' fill='#1f2733' text-anchor='middle'>4,759</text>
+<rect x='450.8' y='259.7' width='34.6' height='100.3' fill='#c8582a' rx='2'/>
+<text x='468.1' y='254.7' font-family='ui-sans-serif,-apple-system,Segoe UI,Helvetica,Arial,sans-serif' font-size='10' fill='#1f2733' text-anchor='middle'>1,906</text>
+<rect x='489.2' y='157.2' width='34.6' height='202.8' fill='#3f8f5f' rx='2'/>
+<text x='506.5' y='152.2' font-family='ui-sans-serif,-apple-system,Segoe UI,Helvetica,Arial,sans-serif' font-size='10' fill='#1f2733' text-anchor='middle'>3,856</text>
+<text x='470.0' y='380' font-family='ui-sans-serif,-apple-system,Segoe UI,Helvetica,Arial,sans-serif' font-size='12' fill='#1f2733' text-anchor='middle'>heavy</text>
+<rect x='572.4' y='109.6' width='34.6' height='250.4' fill='#2c6fbb' rx='2'/>
+<text x='589.7' y='104.6' font-family='ui-sans-serif,-apple-system,Segoe UI,Helvetica,Arial,sans-serif' font-size='10' fill='#1f2733' text-anchor='middle'>4,760</text>
+<rect x='610.8' y='259.7' width='34.6' height='100.3' fill='#c8582a' rx='2'/>
+<text x='628.1' y='254.7' font-family='ui-sans-serif,-apple-system,Segoe UI,Helvetica,Arial,sans-serif' font-size='10' fill='#1f2733' text-anchor='middle'>1,906</text>
+<rect x='649.2' y='150.8' width='34.6' height='209.2' fill='#3f8f5f' rx='2'/>
+<text x='666.5' y='145.8' font-family='ui-sans-serif,-apple-system,Segoe UI,Helvetica,Arial,sans-serif' font-size='10' fill='#1f2733' text-anchor='middle'>3,976</text>
+<text x='630.0' y='380' font-family='ui-sans-serif,-apple-system,Segoe UI,Helvetica,Arial,sans-serif' font-size='12' fill='#1f2733' text-anchor='middle'>worst</text>
+<rect x='726' y='70' width='14' height='10' fill='#2c6fbb' rx='2'/>
+<text x='746' y='79' font-family='ui-sans-serif,-apple-system,Segoe UI,Helvetica,Arial,sans-serif' font-size='11' fill='#1f2733'>fixed-conservative</text>
+<rect x='726' y='90' width='14' height='10' fill='#c8582a' rx='2'/>
+<text x='746' y='99' font-family='ui-sans-serif,-apple-system,Segoe UI,Helvetica,Arial,sans-serif' font-size='11' fill='#1f2733'>fixed-short</text>
+<rect x='726' y='110' width='14' height='10' fill='#3f8f5f' rx='2'/>
+<text x='746' y='119' font-family='ui-sans-serif,-apple-system,Segoe UI,Helvetica,Arial,sans-serif' font-size='11' fill='#1f2733'>adaptive</text>
+<line x1='70' y1='360.0' x2='710' y2='360.0' stroke='#5a6472' stroke-width='1.5'/>
+<text transform='translate(18,216) rotate(-90)' font-family='ui-sans-serif,-apple-system,Segoe UI,Helvetica,Arial,sans-serif' font-size='12' fill='#1f2733' text-anchor='middle'>litres of mains water</text>
+</svg>

@@ -1,0 +1,37 @@
+<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 900 420' width='900' height='420' role='img'>
+<rect width='900' height='420' fill='#ffffff'/>
+<text x='24' y='30' font-family='ui-sans-serif,-apple-system,Segoe UI,Helvetica,Arial,sans-serif' font-size='16' font-weight='600' fill='#1f2733'>Final rinse: return conductivity above the incoming water</text>
+<text x='24' y='50' font-family='ui-sans-serif,-apple-system,Segoe UI,Helvetica,Arial,sans-serif' font-size='12' fill='#6b7684'>Heavy soil. The adaptive recipe stops when the trace has been under the limit for ten seconds; the fixed ones stop on a timer.</text>
+<line x1='70' y1='343.9' x2='710' y2='343.9' stroke='#d8dee6' stroke-width='1'/>
+<text x='62' y='347.9' font-family='ui-sans-serif,-apple-system,Segoe UI,Helvetica,Arial,sans-serif' font-size='11' fill='#6b7684' text-anchor='end'>0</text>
+<line x1='70' y1='278.6' x2='710' y2='278.6' stroke='#d8dee6' stroke-width='1'/>
+<text x='62' y='282.6' font-family='ui-sans-serif,-apple-system,Segoe UI,Helvetica,Arial,sans-serif' font-size='11' fill='#6b7684' text-anchor='end'>10</text>
+<line x1='70' y1='213.3' x2='710' y2='213.3' stroke='#d8dee6' stroke-width='1'/>
+<text x='62' y='217.3' font-family='ui-sans-serif,-apple-system,Segoe UI,Helvetica,Arial,sans-serif' font-size='11' fill='#6b7684' text-anchor='end'>20</text>
+<line x1='70' y1='148.1' x2='710' y2='148.1' stroke='#d8dee6' stroke-width='1'/>
+<text x='62' y='152.1' font-family='ui-sans-serif,-apple-system,Segoe UI,Helvetica,Arial,sans-serif' font-size='11' fill='#6b7684' text-anchor='end'>30</text>
+<line x1='70' y1='82.8' x2='710' y2='82.8' stroke='#d8dee6' stroke-width='1'/>
+<text x='62' y='86.8' font-family='ui-sans-serif,-apple-system,Segoe UI,Helvetica,Arial,sans-serif' font-size='11' fill='#6b7684' text-anchor='end'>40</text>
+<line x1='70.0' y1='72' x2='70.0' y2='364' stroke='#d8dee6' stroke-width='1'/>
+<text x='70.0' y='382' font-family='ui-sans-serif,-apple-system,Segoe UI,Helvetica,Arial,sans-serif' font-size='11' fill='#6b7684' text-anchor='middle'>0</text>
+<line x1='269.5' y1='72' x2='269.5' y2='364' stroke='#d8dee6' stroke-width='1'/>
+<text x='269.5' y='382' font-family='ui-sans-serif,-apple-system,Segoe UI,Helvetica,Arial,sans-serif' font-size='11' fill='#6b7684' text-anchor='middle'>2.0</text>
+<line x1='469.0' y1='72' x2='469.0' y2='364' stroke='#d8dee6' stroke-width='1'/>
+<text x='469.0' y='382' font-family='ui-sans-serif,-apple-system,Segoe UI,Helvetica,Arial,sans-serif' font-size='11' fill='#6b7684' text-anchor='middle'>4.0</text>
+<line x1='668.4' y1='72' x2='668.4' y2='364' stroke='#d8dee6' stroke-width='1'/>
+<text x='668.4' y='382' font-family='ui-sans-serif,-apple-system,Segoe UI,Helvetica,Arial,sans-serif' font-size='11' fill='#6b7684' text-anchor='middle'>6.0</text>
+<line x1='70' y1='343.2' x2='710' y2='343.2' stroke='#5a6472' stroke-width='1.5' stroke-dasharray='6 4'/>
+<text x='76' y='337.2' font-family='ui-sans-serif,-apple-system,Segoe UI,Helvetica,Arial,sans-serif' font-size='11' fill='#5a6472'>release limit 0.10 mS/cm</text>
+<rect x='70' y='72' width='640' height='292' fill='none' stroke='#5a6472' stroke-width='1'/>
+<polyline points='70.00,320.32 78.31,274.44 86.62,256.64 94.94,237.41 103.25,217.49 111.56,198.41 119.87,180.52 128.18,163.11 136.49,148.79 144.81,135.58 153.12,124.29 161.43,114.07 169.74,105.57 178.05,98.88 186.36,94.35 194.68,92.14 202.99,92.59 211.30,96.89 219.61,104.18 227.92,114.75 236.23,128.41 244.55,144.07 252.86,161.16 261.17,178.91 269.48,196.65 277.79,213.78 286.10,229.79 294.42,244.52 302.73,257.73 311.04,269.65 319.35,280.12 327.66,289.22 335.97,297.13 344.29,303.87 352.60,309.71 360.91,314.72 369.22,318.98 377.53,322.64 385.84,325.82 394.16,328.43 402.47,330.72 410.78,332.64 419.09,334.36 427.40,335.75 435.71,336.93 444.03,338.06 452.34,338.85 460.65,339.54 468.96,340.21 477.27,340.75 485.58,341.20 493.90,341.53 502.21,341.95 510.52,342.17 518.83,342.46 527.14,342.68 535.45,342.91 543.77,343.06 552.08,343.20 560.39,343.29 568.70,343.26 577.01,343.43 585.32,343.50 593.64,343.55 601.95,343.59 610.26,343.66 618.57,343.52 626.88,343.70 635.19,343.76 643.51,343.74 651.82,343.77 660.13,343.79 668.44,343.76 676.75,343.84 685.06,343.84 693.38,343.82 701.69,343.80 710.00,343.86' fill='none' stroke='#2c6fbb' stroke-width='2' stroke-linejoin='round'/>
+<line x1='726' y1='78' x2='750' y2='78' stroke='#2c6fbb' stroke-width='3'/>
+<text x='756' y='82' font-family='ui-sans-serif,-apple-system,Segoe UI,Helvetica,Arial,sans-serif' font-size='11' fill='#1f2733'>fixed-conservative</text>
+<polyline points='70.00,322.71 78.31,275.93 86.62,258.05 94.94,238.76 103.25,218.50 111.56,199.42 119.87,180.42 128.18,164.68 136.49,149.35 144.81,136.15 153.12,124.11 161.43,114.93 169.74,105.79 178.05,99.05 186.36,94.31 194.68,92.15 202.99,92.47 211.30,96.39 219.61,103.67 227.92,114.37 236.23,127.81 244.55,143.36 252.86,160.36 261.17,178.17 269.48,195.92 277.79,213.04 286.10,229.13 294.42,243.94 302.73,257.28 311.04,269.15 319.35,279.66 327.66,288.81 335.97,296.72 344.29,303.60 352.60,309.53 360.91,314.72' fill='none' stroke='#c8582a' stroke-width='2' stroke-linejoin='round'/>
+<line x1='726' y1='98' x2='750' y2='98' stroke='#c8582a' stroke-width='3'/>
+<text x='756' y='102' font-family='ui-sans-serif,-apple-system,Segoe UI,Helvetica,Arial,sans-serif' font-size='11' fill='#1f2733'>fixed-short</text>
+<polyline points='70.00,306.53 78.31,269.25 86.62,251.92 94.94,233.20 103.25,212.47 111.56,193.93 119.87,175.73 128.18,159.87 136.49,145.22 144.81,133.21 153.12,121.68 161.43,111.98 169.74,103.88 178.05,97.71 186.36,93.61 194.68,92.20 202.99,93.76 211.30,98.41 219.61,106.69 227.92,118.32 236.23,132.32 244.55,148.51 252.86,165.85 261.17,183.57 269.48,201.24 277.79,218.11 286.10,233.83 294.42,248.19 302.73,261.11 311.04,272.61 319.35,282.61 327.66,291.43 335.97,298.97 344.29,305.50 352.60,311.11 360.91,316.03 369.22,320.10 377.53,323.53 385.84,326.59 394.16,329.15 402.47,331.33 410.78,333.17 419.09,334.79 427.40,336.07 435.71,337.25 444.03,338.22 452.34,339.13 460.65,339.78 468.96,340.39 477.27,340.84 485.58,341.33 493.90,341.74 502.21,342.06 510.52,342.37 518.83,342.55 527.14,342.74 535.45,342.90 543.77,343.02 552.08,343.14 560.39,343.30 568.70,343.33 577.01,343.42 585.32,343.46' fill='none' stroke='#3f8f5f' stroke-width='2' stroke-linejoin='round'/>
+<line x1='726' y1='118' x2='750' y2='118' stroke='#3f8f5f' stroke-width='3'/>
+<text x='756' y='122' font-family='ui-sans-serif,-apple-system,Segoe UI,Helvetica,Arial,sans-serif' font-size='11' fill='#1f2733'>adaptive</text>
+<text x='390' y='406' font-family='ui-sans-serif,-apple-system,Segoe UI,Helvetica,Arial,sans-serif' font-size='12' fill='#1f2733' text-anchor='middle'>minutes into the phase</text>
+<text transform='translate(18,218) rotate(-90)' font-family='ui-sans-serif,-apple-system,Segoe UI,Helvetica,Arial,sans-serif' font-size='12' fill='#1f2733' text-anchor='middle'>return minus supply, mS/cm</text>
+</svg>
