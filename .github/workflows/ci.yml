@@ -1,0 +1,98 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+    inputs:
+      full_sweep:
+        description: "Re-run all twelve cells of the experiment matrix and check every committed figure reproduces"
+        type: boolean
+        default: false
+
+# A superseded push stops burning runner minutes immediately.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  # Everything in one job on purpose. There are no dependencies to install and
+  # nothing to parallelise across, so a second job would cost another minute of
+  # runner start-up to save a few seconds of wall clock.
+  checks:
+    name: lint, tests, reproduce
+    runs-on: ubuntu-latest
+    # The end-to-end cycles are the bulk of this: twenty-three of them, each
+    # simulating most of an hour of plant at a 200 ms scan. About twelve
+    # minutes on a runner. The timeout is a stuck-job guard, not a budget.
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+          cache-dependency-path: requirements-dev.txt
+
+      # pytest and ruff only; the project itself has no runtime dependencies.
+      - name: Install the development tools
+        run: pip install -r requirements-dev.txt
+
+      - name: Lint
+        run: ruff check src scripts tests
+
+      - name: The ST compiles and every program instantiates
+        run: |
+          python -c "
+          from src.iec61131.runtime import load
+          from src.harness.cell import PLC_DIR, PROGRAM_ORDER
+          rt = load(PLC_DIR, PROGRAM_ORDER)
+          print(len(rt.globals), 'globals,', len(rt.fb_pous), 'function blocks,',
+                len(rt.programs), 'programs,', len(rt.located), 'located variables')
+          "
+
+      - name: docs/io_map.md still matches the ST declarations
+        run: python scripts/render_io_map.py --check
+
+      - name: Unit tests
+        run: python -m pytest -q -m "not slow"
+
+      - name: Sequencing, fault injection and Modbus end to end
+        run: python -m pytest -q -m "slow"
+
+      - name: One committed cell of the sweep reproduces and the record chain verifies
+        run: python scripts/verify_results.py --recipe adaptive --scenario medium
+
+      - name: The whole sweep reproduces
+        if: github.event_name == 'workflow_dispatch' && github.event.inputs.full_sweep == 'true'
+        run: python scripts/verify_results.py --all
+
+      - name: The HMI and Modbus servers come up, run a cycle and shut themselves down
+        run: python scripts/serve_hmi.py --speed 400 --soil light --autostart --seconds 240
+
+  # Cheap compatibility check on the oldest and newest interpreters this
+  # project claims. Gated behind the main job so a real failure only costs one
+  # job's worth of minutes.
+  compat:
+    name: python ${{ matrix.python-version }}
+    needs: checks
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    strategy:
+      fail-fast: true
+      matrix:
+        python-version: ["3.9", "3.13"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+          cache: pip
+          cache-dependency-path: requirements-dev.txt
+      - run: pip install -r requirements-dev.txt
+      - run: python -m pytest -q -m "not slow"

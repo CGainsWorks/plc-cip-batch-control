@@ -1,0 +1,31 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.eggs/
+build/
+dist/
+.venv/
+venv/
+env/
+.python-version
+
+# Tooling
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.coverage
+htmlcov/
+
+# Scratch output from a local run. results/ is committed on purpose: the
+# figures and batch records in the README are the ones CI reproduces, but
+# the per-cell cache that lets an interrupted sweep resume is not.
+results/.cache/
+scratch/
+*.log
+
+# Editors / OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db

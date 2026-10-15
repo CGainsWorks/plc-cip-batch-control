@@ -1,0 +1,4 @@
+# The project itself has no runtime dependencies. These are for the tests and
+# the linter only.
+pytest==8.3.4
+ruff==0.8.4

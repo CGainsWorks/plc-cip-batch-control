@@ -1,0 +1,134 @@
+# Limitations and what commissioning on real hardware would need
+
+**There is no hardware.** The ST is real and it runs but it runs on an
+interpreter written for this repository against a model written for this
+repository. That is worth being precise about, because the difference between
+"this logic is sound" and "this logic is proven" is the whole of commissioning.
+
+## What is genuinely demonstrated
+
+* The ST parses, resolves and executes as IEC 61131-3 Structured Text, with PLC
+  semantics rather than Python ones: integers wrap at their declared width,
+  integer division truncates towards zero, `MOD` takes the sign of the
+  dividend, structures assign by value and the standard timers and counters
+  behave as the standard says. The contract is
+  [tests/test_st_language.py](../tests/test_st_language.py).
+* The sequence, the interlocks, the alarm state model and the release logic
+  behave correctly against a plant that conserves mass and energy, has a real
+  transport delay and fails in the ways plants fail.
+* The I/O map, the Modbus map and the documentation all come from the same
+  declarations and CI fails if they diverge.
+* Every figure in the README is reproducible from the committed code with one
+  command and CI re-runs one cell of the sweep on every push to prove the
+  numbers still hold.
+
+## What is not
+
+### The interpreter is not a certified compiler
+
+`src/iec61131` implements the subset this project uses and no more. It has no
+`SFC`, no `LD`, no `FBD`, no `ACTION`, no `METHOD`, no `INTERFACE`, no
+`POINTER`, no `REF_TO`, no `ANY` generics, no `TIME_OF_DAY` or `DATE`, no
+retained-variable semantics across a power cycle, no multi-task configuration
+and no `VAR_EXTERNAL`. Its STRING handling is minimal. It has not been run
+against a conformance suite.
+
+The practical consequence: the ST here is portable in style but has not been
+compiled by a vendor toolchain. **Before anything is downloaded to a
+controller, the whole of `plc/` has to be compiled by the target toolchain and
+the differences dealt with.** Expected work: enumeration and structure syntax
+differences between vendors, `TIME` handling (this project keeps TIME in
+seconds internally and `TIME_TO_REAL` returns milliseconds, matching CODESYS)
+and the `AT %...` addressing convention, which differs between CODESYS-style
+indexing and Siemens-style byte offsets.
+
+A sensible next step would be building the same source with
+[MatIEC](https://github.com/nucleron/matiec) -- the ST to C compiler OpenPLC
+uses -- and running it under the OpenPLC runtime against the same plant model
+over Modbus. That would turn "a purpose-built interpreter executes this" into
+"a third-party compiler accepts this", which is a meaningfully stronger claim.
+
+### The model is structurally sound and numerically fitted
+
+The structure of [model.py](../src/plant/model.py) is first-principles:
+conservation of mass and energy, tanks in series, Arrhenius kinetics, a
+Michaelis-type concentration term, a wall-shear term. The **coefficients** are
+plausible figures chosen so that the model behaves the way CIP practice says
+cleaning behaves -- a 2 % caustic wash at 75 °C and 1.75 m/s cleans a normal
+soil in about ten minutes, a cold water rinse removes loose soil and nothing
+else, a 1 % acid wash removes scale. They are not fitted to measurements from a
+particular plant and the removal rates in particular would need
+re-identification against swab or riboflavin results on the real circuit.
+
+So: the 23 % water saving is a property of this model. The *mechanism* -- a
+rinse that stops when the water is clean uses less water than a rinse sized for
+the worst case -- is general. The number is not.
+
+### The release limits are assumptions, not standards
+
+`RESIDUAL_LIMIT_G_M2 = 1.0` and `RESIDUAL_CHEMICAL_LIMIT_PPM = 50.0` are
+working figures. Real cleaning validation is pass/fail against visually clean
+plus an ATP or protein swab threshold and the rinse endpoint is usually
+specified as a conductivity within some microsiemens of the feed water. The
+numbers here are in the right territory and are stated so they can be
+challenged but they are not drawn from 3-A, EHEDG or a site HACCP plan.
+
+### The controller verifies the recipe, not the recipe's adequacy
+
+This is the most important limitation and it is a real one, not an artefact of
+simulation. The `fixed-short` recipe in the sweep completes with **every phase
+passing its own criteria** and is still held, because its final rinse leaves
+290 mg/L of detergent in the circuit and the conductivity check catches that.
+But its caustic hold is also too short and nothing in the controller can know
+that: it was asked for five minutes of verified hold at 2 % and 75 °C and it
+delivered exactly that. On the heaviest soil it leaves 0.21 g/m² behind --
+inside the limit used here but trending the wrong way and a further trim
+would cross it with the controller still reporting every phase as passed.
+
+What catches that in the real world is cleaning validation and what the
+controller contributes is the batch record: the verified hold, minimum
+temperature, mean concentration and minimum flow it actually achieved, signed
+and chained, so a recipe change can be argued about with evidence. Automation
+does not remove the validation step. It makes the validation argument
+checkable.
+
+### Not modelled at all
+
+* **Neutralisation.** Caustic and acid are independent species; carryover does
+  not neutralise. The drain-down keeps carryover under 0.2 % of a charge.
+* **Effluent pH and the drain interceptor.** A real site needs both.
+* **Scheduling.** One circuit, one unit. A real skid serves several circuits
+  and the interesting problem becomes which to clean when.
+* **Redeposition** of soil from a spent wash solution.
+* **Steam-side dynamics**: the exchanger is duty against valve position.
+* **A second conductivity element.** The release decision rests on one
+  transmitter. The wash plausibility check catches the failure that matters
+  but a real installation handling product contact would fit a second
+  element and compare them.
+* **Retentive memory and warm restart.** The controller has no notion of
+  resuming a batch after a power cycle, which a real unit needs.
+* **Change control.** A real installation needs version control on the recipe
+  set with an approval trail. The recipes here are a JSON file.
+* **Wall-clock time.** Batch records carry simulated time only, so a rerun
+  reproduces them byte for byte. A real installation would stamp them from the
+  controller clock and the chain would need a trusted time source.
+* **Security.** The Modbus server has no authentication, because Modbus TCP has
+  none. On a real site it belongs on an isolated control network behind a
+  firewall, not on an office LAN.
+
+## If this were a real project
+
+The order of work after the logic is written:
+
+1. Compile the ST with the target vendor toolchain; fix what it rejects.
+2. Simulate again on the vendor's own simulator, which exercises their runtime
+   rather than this interpreter.
+3. Loop checks and a point-to-point I/O test on the built skid.
+4. Dry-run the sequence with water only, on every phase, with the fault
+   injection list from [tests/test_faults.py](../tests/test_faults.py) applied
+   by hand.
+5. Identify the removal-rate coefficients against swab results on the real
+   circuit; re-tune the loops against the real heat exchanger.
+6. Cleaning validation of the final recipes.
+7. Only then run the adaptive recipe in anger and only with the fixed recipe
+   still available as a fallback.

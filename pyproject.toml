@@ -1,0 +1,41 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "plc-cip-batch-control"
+version = "1.0.0"
+description = "IEC 61131-3 Structured Text controller for a clean-in-place skid, with an ST interpreter and a first-principles plant model to run it against."
+readme = "README.md"
+requires-python = ">=3.9"
+license = { file = "LICENSE" }
+authors = [{ name = "CGainsWorks" }]
+keywords = ["plc", "iec-61131-3", "structured-text", "isa-88", "cip", "modbus", "automation"]
+
+# There are no runtime dependencies on purpose. The ST front end, the plant
+# model, the Modbus TCP server, the HMI and the charts are all standard library.
+dependencies = []
+
+[tool.setuptools]
+packages = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q --strict-markers"
+markers = [
+    "slow: runs a full CIP cycle, tens of seconds each",
+]
+
+[tool.ruff]
+line-length = 100
+target-version = "py39"
+
+[tool.ruff.lint]
+# "UP" (pyupgrade) is deliberately absent: the reported numbers were produced
+# on Python 3.9 and the annotations stay in typing form so they read the same
+# on every supported interpreter.
+select = ["E", "F", "W", "I", "B", "C4"]
+ignore = ["E501"]
+
+[tool.ruff.lint.per-file-ignores]
+"scripts/*" = ["E402"]
