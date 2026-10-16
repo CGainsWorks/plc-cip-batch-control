@@ -19,21 +19,26 @@ concurrency:
 permissions:
   contents: read
 
+env:
+  # The PLCopen TC6 v2.01 schema, from the Beremiz repository at a fixed
+  # commit, checked by hash. Fetched rather than committed: it is not ours.
+  TC6_XSD_URL: https://raw.githubusercontent.com/beremiz/beremiz/cbecc82044b3aa32bdabbfb58ce85d6f1abfb619/plcopen/tc6_xml_v201.xsd
+  TC6_XSD_SHA256: 591b92ba65018a77c32ab9e606abf27bd810cb1f7761d972a85689531c51e20f
+
 jobs:
-  # Everything in one job on purpose. There are no dependencies to install and
-  # nothing to parallelise across, so a second job would cost another minute of
-  # runner start-up to save a few seconds of wall clock.
+  # Everything that runs on the interpreter, in one job: there is nothing to
+  # install, so a second job would cost more in runner start-up than it saved.
   checks:
     name: lint, tests, reproduce
-    runs-on: ubuntu-latest
-    # The end-to-end cycles are the bulk of this: twenty-three of them, each
-    # simulating most of an hour of plant at a 200 ms scan. About twelve
-    # minutes on a runner. The timeout is a stuck-job guard, not a budget.
+    runs-on: ubuntu-24.04
+    # The end-to-end cycles are most of this job: each simulates most of an
+    # hour of plant at a 200 ms scan. The whole job took a little over four
+    # minutes on the last runs. The timeout is a stuck-job guard, not a budget.
     timeout-minutes: 30
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7.0.1
 
-      - uses: actions/setup-python@v5
+      - uses: actions/setup-python@v7.0.0
         with:
           python-version: "3.11"
           cache: pip
@@ -46,7 +51,7 @@ jobs:
       - name: Lint
         run: ruff check src scripts tests
 
-      - name: The ST compiles and every program instantiates
+      - name: The ST parses and every program instantiates in the interpreter
         run: |
           python -c "
           from src.iec61131.runtime import load
@@ -59,11 +64,18 @@ jobs:
       - name: docs/io_map.md still matches the ST declarations
         run: python scripts/render_io_map.py --check
 
+      - name: The PLCopen export is current, validates against TC6 v2.01 and reads back
+        run: |
+          python scripts/export_plcopen.py --check --roundtrip scratch/plcopen
+          curl -sSfL "$TC6_XSD_URL" -o scratch/tc6_xml_v201.xsd
+          echo "$TC6_XSD_SHA256  scratch/tc6_xml_v201.xsd" | sha256sum -c -
+          xmllint --noout --schema scratch/tc6_xml_v201.xsd export/plcopen/cip_skid.xml
+
       - name: Unit tests
         run: python -m pytest -q -m "not slow"
 
       - name: Sequencing, fault injection and Modbus end to end
-        run: python -m pytest -q -m "slow"
+        run: python -m pytest -q -m "slow and not compiled"
 
       - name: One committed cell of the sweep reproduces and the record chain verifies
         run: python scripts/verify_results.py --recipe adaptive --scenario medium
@@ -75,21 +87,105 @@ jobs:
       - name: The HMI and Modbus servers come up, run a cycle and shut themselves down
         run: python scripts/serve_hmi.py --speed 400 --soil light --autostart --seconds 240
 
+  # The same source compiled by an independent IEC 61131-3 compiler, RuSTy,
+  # and run against the same plant model. Runs alongside `checks`.
+  rusty:
+    name: RuSTy compile and cross-check
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    env:
+      RUSTY_VERSION: v1.0.6
+      RUST_TOOLCHAIN: "1.90.0"
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - uses: actions/checkout@v7.0.1
+
+      - uses: actions/setup-python@v7.0.0
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: requirements-dev.txt
+
+      - name: Install the development tools
+        run: pip install -r requirements-dev.txt
+
+      # The compiler packages and the mock-time standard library only change
+      # with the pinned versions or the build script.
+      - name: Cache the RuSTy toolchain
+        id: rusty-cache
+        uses: actions/cache@v6.1.0
+        with:
+          path: ~/rusty
+          key: rusty-${{ env.RUSTY_VERSION }}-rust-${{ env.RUST_TOOLCHAIN }}-${{ hashFiles('scripts/rusty/build_stdlib.sh') }}
+
+      - name: Download the pinned RuSTy release
+        if: steps.rusty-cache.outputs.cache-hit != 'true'
+        run: |
+          gh release download "$RUSTY_VERSION" -R PLC-lang/rusty -D ~/rusty/debs \
+            -p 'plc-compiler_*_amd64.deb' -p 'plc-stdlib_*_amd64.deb'
+
+      - name: Install the RuSTy compiler
+        run: |
+          sudo apt-get install -y --no-install-recommends ~/rusty/debs/plc-compiler_*_amd64.deb ~/rusty/debs/plc-stdlib_*_amd64.deb
+          plc --version
+
+      - name: Build the RuSTy standard library with mock_time
+        if: steps.rusty-cache.outputs.cache-hit != 'true'
+        run: |
+          rustup toolchain install "$RUST_TOOLCHAIN" --profile minimal
+          RUSTUP_TOOLCHAIN="$RUST_TOOLCHAIN" scripts/rusty/build_stdlib.sh "$RUSTY_VERSION" ~/rusty/stdlib
+
+      - name: Compile plc/ with RuSTy, warnings as errors
+        run: scripts/rusty/compile_plc.sh ~/rusty/stdlib build/rusty
+
+      - name: The ST read back from the PLCopen export compiles clean too
+        run: |
+          python scripts/export_plcopen.py --check --roundtrip scratch/plcopen
+          out=$(plc --check 'scratch/plcopen/*.st' -i '/usr/share/plc/include/*.st' --error-format clang 2>&1)
+          printf '%s\n' "$out"
+          test -z "$out"
+
+      - name: The compiled program loads with the declared layout
+        run: python -m pytest -q -m "compiled and not slow"
+
+      - name: The whole end-to-end suite against the compiled program
+        env:
+          CIP_BACKEND: rusty
+        run: python -m pytest -q -m slow
+
+      - name: Interpreter and compiled program agree, scenario by scenario
+        run: python scripts/crosscheck_compiled.py --out scratch/crosscheck_rusty.json
+
+      - name: Modbus and the HMI in front of the compiled program
+        env:
+          CIP_BACKEND: rusty
+        run: python scripts/serve_hmi.py --speed 400 --soil light --autostart --seconds 240
+
+      - name: Keep the comparison
+        if: always()
+        uses: actions/upload-artifact@v7.0.1
+        with:
+          name: rusty-crosscheck
+          path: |
+            scratch/crosscheck_rusty.json
+            build/rusty/
+          if-no-files-found: ignore
+
   # Cheap compatibility check on the oldest and newest interpreters this
   # project claims. Gated behind the main job so a real failure only costs one
   # job's worth of minutes.
   compat:
     name: python ${{ matrix.python-version }}
     needs: checks
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 10
     strategy:
       fail-fast: true
       matrix:
         python-version: ["3.9", "3.13"]
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+      - uses: actions/checkout@v7.0.1
+      - uses: actions/setup-python@v7.0.0
         with:
           python-version: ${{ matrix.python-version }}
           cache: pip
