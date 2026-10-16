@@ -1,5 +1,5 @@
 (*
-    FB_Alarm.st -- one alarm point, following the ISA-18.2 state model.
+    FB_Alarm.st: one alarm point, following the ISA-18.2 state model.
 
     States are held in the ST_Alarm structure the caller owns, so the whole
     alarm list is one array a SCADA client can read in a single request:

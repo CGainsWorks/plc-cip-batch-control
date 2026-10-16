@@ -1,5 +1,5 @@
 (*
-    FB_Pump.st -- motor starter with interlock, feedback supervision and a
+    FB_Pump.st: motor starter with interlock, feedback supervision and a
     latched trip.
 
     A pump that is commanded to run but reports no feedback inside

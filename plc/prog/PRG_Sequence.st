@@ -1,5 +1,5 @@
 (*
-    PRG_Sequence.st -- the ISA-88 unit procedure.
+    PRG_Sequence.st: the ISA-88 unit procedure.
 
     This program owns the unit state machine and turns the recipe into phase
     parameters. It does not touch a single output. It produces a demand;
@@ -19,7 +19,7 @@
     The return element sits downstream of the whole circuit, so a rinse that
     stops after twenty seconds has only measured the water that was already in
     the pipe. The floor is one and a half circuit turnovers at the recipe flow
-    -- 135 seconds for a 450 litre circuit at 18 m3/h -- or the recipe's own
+    (135 seconds for a 450 litre circuit at 18 m3/h) or the recipe's own
     minimum, whichever is longer.
 *)
 FUNCTION RinseBlankTime : TIME
@@ -34,7 +34,7 @@ END_VAR
 
 rFlowLps := MAX(rFlowSpM3h, 1.0) * 1000.0 / 3600.0;
 rTurnoverS := C_RINSE_TURNOVERS * C_CIRCUIT_VOLUME_L / rFlowLps;
-RinseBlankTime := REAL_TO_TIME(MAX(TIME_TO_REAL(tFloor), rTurnoverS * 1000.0));
+RinseBlankTime := SecondsToTime(MAX(TimeToSeconds(tFloor), rTurnoverS));
 
 END_FUNCTION
 
@@ -343,7 +343,7 @@ IF gPhase <> ePrevPhase THEN
     END_IF
 END_IF
 
-iResultIndex := gPhase;
+iResultIndex := TO_INT(gPhase);
 
 IF xExecutePhase AND fbPhase.xDone THEN
     gResults[iResultIndex] := fbPhase.stResult;

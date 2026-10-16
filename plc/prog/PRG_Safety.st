@@ -1,5 +1,5 @@
 (*
-    PRG_Safety.st -- interlocks and permissives. First program in the task, so
+    PRG_Safety.st: interlocks and permissives. First program in the task, so
     every other program sees a permit that was evaluated against this scan's
     inputs rather than the previous one's.
 

@@ -1,5 +1,5 @@
 (*
-    GVL_Cip.st -- internal state shared between the five programs.
+    GVL_Cip.st: internal state shared between the five programs.
 
     Nothing here is located: these are the controller's own working data, not
     field I/O. PRG_Sequence owns the state and phase variables, PRG_Control owns

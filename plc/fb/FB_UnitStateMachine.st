@@ -1,5 +1,5 @@
 (*
-    FB_UnitStateMachine.st -- the ISA-88 unit procedural state model.
+    FB_UnitStateMachine.st: the ISA-88 unit procedural state model.
 
     Commands are edge triggered, so a stuck HMI bit cannot hold the unit in a
     transition. ABORTING is deliberately not instantaneous: it runs for

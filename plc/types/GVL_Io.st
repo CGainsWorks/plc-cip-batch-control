@@ -1,5 +1,5 @@
 (*
-    GVL_Io.st -- the I/O image.
+    GVL_Io.st: the I/O image.
 
     These declarations are the single source of truth for the address map. The
     simulated field bus and the Modbus TCP server both build their tables by

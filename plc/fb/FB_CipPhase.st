@@ -1,5 +1,5 @@
 (*
-    FB_CipPhase.st -- the phase engine.
+    FB_CipPhase.st: the phase engine.
 
     Every CIP phase is the same four steps with different parameters, so there
     is one engine and the recipe supplies ST_PhaseParams:
@@ -96,10 +96,10 @@ IF fbStart.Q THEN
     stResult.rEnergyKWh := 0.0;
 END_IF
 
-rHoldRequiredS := TIME_TO_REAL(stParams.tHold) / 1000.0;
-rMinPhaseS     := TIME_TO_REAL(stParams.tMinPhase) / 1000.0;
-rMaxPhaseS     := TIME_TO_REAL(stParams.tMaxPhase) / 1000.0;
-rRecoverS      := TIME_TO_REAL(stParams.tRecover) / 1000.0;
+rHoldRequiredS := TimeToSeconds(stParams.tHold);
+rMinPhaseS     := TimeToSeconds(stParams.tMinPhase);
+rMaxPhaseS     := TimeToSeconds(stParams.tMaxPhase);
+rRecoverS      := TimeToSeconds(stParams.tRecover);
 
 (* An adaptive phase is judged on the conductivity endpoint, so the hold
    requirement does not apply and the record should not imply that it does. *)

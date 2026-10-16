@@ -9,6 +9,7 @@ a real PLC and every number downstream is fiction.
 from __future__ import annotations
 
 import math
+import os
 
 import pytest
 
@@ -501,6 +502,31 @@ def test_time_to_real_reports_milliseconds():
         wrap("a := TIME_TO_REAL(T#1s500ms);", declarations="    a : REAL;"),
     )
     assert runtime.get_path("PRG_TEST.a") == pytest.approx(1500.0)
+
+
+def test_time_in_seconds_does_not_depend_on_the_conversion_unit():
+    """plc/fn/Fn_Time.st divides by the conversion of T#1s, so the answer is
+    seconds here (milliseconds underneath) and under RuSTy (nanoseconds)."""
+    fn_time = os.path.join(os.path.dirname(os.path.dirname(__file__)), "plc", "fn", "Fn_Time.st")
+    with open(fn_time, "r", encoding="utf-8") as handle:
+        library = handle.read()
+    runtime = run(
+        library
+        + wrap(
+            "a := TimeToSeconds(T#2m30s); t := SecondsToTime(a * 2.0);",
+            declarations="    a : REAL;\n    t : TIME;",
+        )
+    )
+    assert runtime.get_path("PRG_TEST.a") == pytest.approx(150.0)
+    assert runtime.get_path("PRG_TEST.t") == pytest.approx(300.0)
+
+
+def test_to_int_publishes_an_enumeration_as_its_value():
+    runtime = run(
+        "TYPE E_Ph : (PH_IDLE := 0, PH_ACID_WASH := 4); END_TYPE\n"
+        + wrap("i := TO_INT(PH_ACID_WASH);", declarations="    i : INT;")
+    )
+    assert runtime.get_path("PRG_TEST.i") == 4
 
 
 def test_programs_execute_in_the_configured_order():

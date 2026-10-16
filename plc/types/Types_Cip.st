@@ -1,5 +1,5 @@
 (*
-    Types_Cip.st -- data types for the CIP skid controller.
+    Types_Cip.st: data types for the CIP skid controller.
 
     Naming follows the usual IEC prefixes: x BOOL, i INT, r REAL, t TIME,
     s STRING, e enumeration, st structure, fb function block instance.
@@ -138,7 +138,7 @@ TYPE
     END_STRUCT
 
     ST_Recipe : STRUCT
-        sName            : STRING(24) := 'default';
+        sName            : STRING[24] := 'default';
         xUseAcid         : BOOL := TRUE;
         xUseSanitise     : BOOL := FALSE;
         xAdaptive        : BOOL := FALSE;

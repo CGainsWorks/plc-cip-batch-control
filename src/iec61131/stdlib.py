@@ -321,9 +321,17 @@ STANDARD_FUNCTIONS = {
     "INT_TO_DINT": int,
     "DINT_TO_INT": int,
     "BOOL_TO_INT": lambda x: 1 if x else 0,
+    # The typed-generic TO_INT of edition 3. Its one use here is to publish an
+    # enumeration as its integer value, which a strict compiler will not do
+    # implicitly.
+    "TO_INT": lambda x: _round_half_up(x) if isinstance(x, float) else int(x),
     "INT_TO_BOOL": lambda x: x != 0,
+    "REAL_TO_LREAL": float,
+    "LREAL_TO_REAL": float,
     "REAL_TO_TIME": lambda ms: float(ms) / 1000.0,
     "TIME_TO_REAL": lambda t: float(t) * 1000.0,
+    "LREAL_TO_TIME": lambda ms: float(ms) / 1000.0,
+    "TIME_TO_LREAL": lambda t: float(t) * 1000.0,
     "TIME_TO_DINT": lambda t: _round_half_up(float(t) * 1000.0),
     "DINT_TO_TIME": lambda ms: float(ms) / 1000.0,
     # Strings.

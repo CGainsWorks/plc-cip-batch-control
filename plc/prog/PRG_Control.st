@@ -1,5 +1,5 @@
 (*
-    PRG_Control.st -- the only program that writes to the field outputs.
+    PRG_Control.st: the only program that writes to the field outputs.
 
     It takes the demand PRG_Sequence produced, applies the permissives
     PRG_Safety produced and drives the valve matrix, the two motor starters

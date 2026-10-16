@@ -1,5 +1,5 @@
 (*
-    FB_Totaliser.st -- rectangular integration of a rate against the scan
+    FB_Totaliser.st: rectangular integration of a rate against the scan
     period, with a low-flow cut-off.
 
     The cut-off matters: a flow transmitter parked at 0.3 m3/h of noise while

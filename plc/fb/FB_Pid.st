@@ -1,5 +1,5 @@
 (*
-    FB_Pid.st -- PI(D) controller with clamping anti-windup.
+    FB_Pid.st: PI(D) controller with clamping anti-windup.
 
     The integral only accumulates while the output is off its limit, which is
     what keeps the steam valve from winding up during the long fill step and

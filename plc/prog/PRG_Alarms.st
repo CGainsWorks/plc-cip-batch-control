@@ -1,5 +1,5 @@
 (*
-    PRG_Alarms.st -- the alarm list.
+    PRG_Alarms.st: the alarm list.
 
     Twelve points, each with a priority and an on-delay chosen so that the
     operator is not told about things that resolve themselves. ISA-18.2's first

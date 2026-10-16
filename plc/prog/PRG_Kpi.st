@@ -1,5 +1,5 @@
 (*
-    PRG_Kpi.st -- consumption totals, the batch record and the SCADA image.
+    PRG_Kpi.st: consumption totals, the batch record and the SCADA image.
 
     Everything here is computed from instruments the skid actually has: the
     make-up flow meter, the supply flow meter, the two temperature elements
@@ -146,10 +146,10 @@ IF gUnitState = UST_COMPLETE THEN
 END_IF
 
 (* ---- SCADA image ------------------------------------------------------- *)
-iHmiUnitState        := gUnitState;
-iHmiPhase            := gPhase;
-iHmiPhaseStep        := gPhaseStep;
-iHmiFailCode         := gFailCode;
+iHmiUnitState        := TO_INT(gUnitState);
+iHmiPhase            := TO_INT(gPhase);
+iHmiPhaseStep        := TO_INT(gPhaseStep);
+iHmiFailCode         := TO_INT(gFailCode);
 iHmiActiveAlarms     := giActiveAlarms;
 iHmiFirstOutAlarm    := giFirstOut;
 iHmiBatchId          := giBatchId;
