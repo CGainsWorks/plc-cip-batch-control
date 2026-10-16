@@ -7,6 +7,13 @@
     drift away from the address the logic uses. See docs/io_map.md.
 
     Address convention: %IXb.i is byte b bit i; %ID/%QD/%MD n is double word n.
+
+    Inputs and outputs never share a number: inputs own bytes 0 and 1 and
+    double words 0 to 15, outputs start at byte 2 and double word 16. IEC
+    61131-3 keeps %I and %Q apart, but some runtimes back both with one
+    process image keyed by the number alone (RuSTy does, see
+    docs/compiled_crosscheck.md), and there %IX0.0 and %QX0.0 would be the same
+    bit. Keeping the numbers disjoint costs nothing and works on both kinds.
 *)
 
 VAR_GLOBAL
@@ -48,25 +55,25 @@ VAR_GLOBAL
     rConductivityTank       AT %ID12 : REAL;    (* CT-03, in the balance tank *)
 
     (* ---- digital outputs: valve matrix ------------------------------ *)
-    xV01FreshWater          AT %QX0.0 : BOOL;
-    xV02RecoveredWater      AT %QX0.1 : BOOL;
-    xV03CausticDose         AT %QX0.2 : BOOL;
-    xV04AcidDose            AT %QX0.3 : BOOL;
-    xV05SupplyToCircuit     AT %QX0.4 : BOOL;
-    xV06ReturnToDrain       AT %QX0.5 : BOOL;
-    xV07ReturnToBalance     AT %QX0.6 : BOOL;
-    xV08ReturnToCaustic     AT %QX0.7 : BOOL;
-    xV09ReturnToRecovery    AT %QX1.0 : BOOL;
-    xV10ReturnToAcid        AT %QX1.1 : BOOL;
-    xSupplyPumpRun          AT %QX1.2 : BOOL;
-    xReturnPumpRun          AT %QX1.3 : BOOL;
-    xSteamIsolation         AT %QX1.4 : BOOL;
-    xV11CausticSupply       AT %QX1.5 : BOOL;   (* caustic tank -> balance tank *)
-    xV12AcidSupply          AT %QX1.6 : BOOL;
+    xV01FreshWater          AT %QX2.0 : BOOL;
+    xV02RecoveredWater      AT %QX2.1 : BOOL;
+    xV03CausticDose         AT %QX2.2 : BOOL;
+    xV04AcidDose            AT %QX2.3 : BOOL;
+    xV05SupplyToCircuit     AT %QX2.4 : BOOL;
+    xV06ReturnToDrain       AT %QX2.5 : BOOL;
+    xV07ReturnToBalance     AT %QX2.6 : BOOL;
+    xV08ReturnToCaustic     AT %QX2.7 : BOOL;
+    xV09ReturnToRecovery    AT %QX3.0 : BOOL;
+    xV10ReturnToAcid        AT %QX3.1 : BOOL;
+    xSupplyPumpRun          AT %QX3.2 : BOOL;
+    xReturnPumpRun          AT %QX3.3 : BOOL;
+    xSteamIsolation         AT %QX3.4 : BOOL;
+    xV11CausticSupply       AT %QX3.5 : BOOL;   (* caustic tank -> balance tank *)
+    xV12AcidSupply          AT %QX3.6 : BOOL;
 
     (* ---- analogue outputs ------------------------------------------- *)
-    rSupplyPumpSpeedPct     AT %QD0 : REAL;
-    rSteamValvePct          AT %QD1 : REAL;
+    rSupplyPumpSpeedPct     AT %QD16 : REAL;
+    rSteamValvePct          AT %QD17 : REAL;
 
     (* ---- memory image published to SCADA ---------------------------- *)
     iHmiUnitState           AT %MW0 : INT;

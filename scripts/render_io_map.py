@@ -1,7 +1,7 @@
 """Regenerate docs/io_map.md from the ST declarations.
 
-The address map has exactly one source of truth -- the AT clauses in
-GVL_Io.st -- and this renders it into a table. CI runs it with --check, so a
+The address map has exactly one source of truth, the AT clauses in
+GVL_Io.st, and this renders it into a table. CI runs it with --check, so a
 tag added to the ST without regenerating the document fails the build rather
 than quietly leaving the documentation wrong.
 
@@ -148,7 +148,7 @@ def main() -> int:
         return 0
 
     os.makedirs(os.path.dirname(TARGET), exist_ok=True)
-    with open(TARGET, "w", encoding="utf-8") as handle:
+    with open(TARGET, "w", encoding="utf-8", newline="\n") as handle:
         handle.write(rendered)
     print("wrote", os.path.relpath(TARGET, REPO_ROOT))
     return 0

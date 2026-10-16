@@ -38,6 +38,20 @@ def test_no_two_tags_share_a_modbus_register(io_map):
             occupied.add(key)
 
 
+def test_inputs_and_outputs_never_share_an_address_number(runtime):
+    """IEC 61131-3 keeps %I and %Q apart, RuSTy does not: it backs both with one
+    process image keyed by the numbers, so %IX0.0 and %QX0.0 would be one bit.
+    docs/compiled_crosscheck.md has the story."""
+    seen = {}
+    for name, var in runtime.located.items():
+        address = var.address
+        if address.prefix not in ("I", "Q"):
+            continue
+        key = (address.is_bit, address.word, address.bit)
+        assert key not in seen, "{0} and {1} share {2}".format(seen.get(key), name, key)
+        seen[key] = name
+
+
 def test_inputs_outputs_and_memory_land_in_the_right_tables(io_map):
     for point in io_map.points:
         if point.address.prefix == "I":

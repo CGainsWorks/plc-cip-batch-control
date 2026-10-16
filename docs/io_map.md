@@ -68,28 +68,28 @@ scan, so the server rejects it.
 
 | Tag | Address | Type | Modbus | Notes |
 | --- | --- | --- | --- | --- |
-| `xV01FreshWater` | `%QX0.0` | BOOL | coil 0 |  |
-| `xV02RecoveredWater` | `%QX0.1` | BOOL | coil 1 |  |
-| `xV03CausticDose` | `%QX0.2` | BOOL | coil 2 |  |
-| `xV04AcidDose` | `%QX0.3` | BOOL | coil 3 |  |
-| `xV05SupplyToCircuit` | `%QX0.4` | BOOL | coil 4 |  |
-| `xV06ReturnToDrain` | `%QX0.5` | BOOL | coil 5 |  |
-| `xV07ReturnToBalance` | `%QX0.6` | BOOL | coil 6 |  |
-| `xV08ReturnToCaustic` | `%QX0.7` | BOOL | coil 7 |  |
-| `xV09ReturnToRecovery` | `%QX1.0` | BOOL | coil 8 |  |
-| `xV10ReturnToAcid` | `%QX1.1` | BOOL | coil 9 |  |
-| `xSupplyPumpRun` | `%QX1.2` | BOOL | coil 10 |  |
-| `xReturnPumpRun` | `%QX1.3` | BOOL | coil 11 |  |
-| `xSteamIsolation` | `%QX1.4` | BOOL | coil 12 |  |
-| `xV11CausticSupply` | `%QX1.5` | BOOL | coil 13 | caustic tank -> balance tank |
-| `xV12AcidSupply` | `%QX1.6` | BOOL | coil 14 |  |
+| `xV01FreshWater` | `%QX2.0` | BOOL | coil 16 |  |
+| `xV02RecoveredWater` | `%QX2.1` | BOOL | coil 17 |  |
+| `xV03CausticDose` | `%QX2.2` | BOOL | coil 18 |  |
+| `xV04AcidDose` | `%QX2.3` | BOOL | coil 19 |  |
+| `xV05SupplyToCircuit` | `%QX2.4` | BOOL | coil 20 |  |
+| `xV06ReturnToDrain` | `%QX2.5` | BOOL | coil 21 |  |
+| `xV07ReturnToBalance` | `%QX2.6` | BOOL | coil 22 |  |
+| `xV08ReturnToCaustic` | `%QX2.7` | BOOL | coil 23 |  |
+| `xV09ReturnToRecovery` | `%QX3.0` | BOOL | coil 24 |  |
+| `xV10ReturnToAcid` | `%QX3.1` | BOOL | coil 25 |  |
+| `xSupplyPumpRun` | `%QX3.2` | BOOL | coil 26 |  |
+| `xReturnPumpRun` | `%QX3.3` | BOOL | coil 27 |  |
+| `xSteamIsolation` | `%QX3.4` | BOOL | coil 28 |  |
+| `xV11CausticSupply` | `%QX3.5` | BOOL | coil 29 | caustic tank -> balance tank |
+| `xV12AcidSupply` | `%QX3.6` | BOOL | coil 30 |  |
 
 ## Analogue outputs
 
 | Tag | Address | Type | Modbus | Notes |
 | --- | --- | --- | --- | --- |
-| `rSupplyPumpSpeedPct` | `%QD0` | REAL | holding_register 0-1 |  |
-| `rSteamValvePct` | `%QD1` | REAL | holding_register 2-3 |  |
+| `rSupplyPumpSpeedPct` | `%QD16` | REAL | holding_register 32-33 |  |
+| `rSteamValvePct` | `%QD17` | REAL | holding_register 34-35 |  |
 
 ## Memory: commands and status
 
