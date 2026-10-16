@@ -69,6 +69,8 @@ jobs:
           python scripts/export_plcopen.py --check --roundtrip scratch/plcopen
           curl -sSfL "$TC6_XSD_URL" -o scratch/tc6_xml_v201.xsd
           echo "$TC6_XSD_SHA256  scratch/tc6_xml_v201.xsd" | sha256sum -c -
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq --no-install-recommends libxml2-utils
           xmllint --noout --schema scratch/tc6_xml_v201.xsd export/plcopen/cip_skid.xml
 
       - name: Unit tests
