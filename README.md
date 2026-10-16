@@ -370,12 +370,16 @@ A second job, alongside it, compiles `plc/` with RuSTy and runs the compiled
 program through the end-to-end suite, the eighteen-scenario cross-check and the
 same Modbus and HTTP smoke test.
 
-Everything that needs the full picture is in one job, because with nothing to
+Everything that runs on the interpreter is in one job, because with nothing to
 install a second job would cost more in runner start-up than it saved in wall
-clock: 3.8 minutes for the lot, of which the twenty-three end-to-end cycles
-are 2.8. Two one-job matrix legs then re-run the unit tests on Python 3.9 and
-3.13, gated behind the first job so a real failure only costs one job's worth
-of minutes. A superseded push is cancelled rather than finished.
+clock: about four and a half minutes on the run of 2026-10-16, of which the
+twenty-three end-to-end cycles are a little over three. The RuSTy job runs
+alongside it and took just under six, most of that the interpreter half of the
+cross-check; the same end-to-end suite on the compiled program took under a
+minute. The compiler packages and the mock-time standard library are cached.
+Two one-job matrix legs then re-run the unit tests on Python 3.9 and 3.13,
+gated behind the first job so a real failure only costs one job's worth of
+minutes. A superseded push is cancelled rather than finished.
 
 The fault cases are the ones a commissioning engineer would try with the skid
 in front of them: pump trip mid-wash, emergency stop, loss of the circuit
