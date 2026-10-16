@@ -423,5 +423,5 @@ def phase_timeline(
 
 
 def write(path: str, markup: str) -> None:
-    with open(path, "w", encoding="utf-8") as handle:
+    with open(path, "w", encoding="utf-8", newline="\n") as handle:
         handle.write(markup)

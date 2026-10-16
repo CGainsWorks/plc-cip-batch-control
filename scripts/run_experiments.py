@@ -1,7 +1,7 @@
 """Run every recipe against every soil load and write the results.
 
 Produces results/experiments.json, the figures used in the README and one
-signed batch record per run. Deterministic: the plant's noise generator is
+hash-chained batch record per run. Deterministic: the plant's noise generator is
 seeded per run, no wall-clock time enters any output, so a rerun reproduces the
 files byte for byte. scripts/verify_results.py depends on that.
 
@@ -399,12 +399,12 @@ def write_records(runs: List[Dict[str, Any]]) -> List[str]:
         record = batch_record.build(
             result,
             catalogue[run["recipe"]],
-            previous_signature=previous,
+            previous_hash=previous,
             residual_limit_g_m2=RESIDUAL_LIMIT_G_M2,
             chemical_limit_ppm=RESIDUAL_CHEMICAL_LIMIT_PPM,
             notes=["simulated run {0} of the experiment sweep".format(index)],
         )
-        previous = record["signature"]
+        previous = record["record_hash"]
         written.append(
             batch_record.write(
                 RECORDS,
@@ -462,7 +462,7 @@ def main() -> int:
         ],
     }
     os.makedirs(os.path.dirname(args.out), exist_ok=True)
-    with open(args.out, "w", encoding="utf-8") as handle:
+    with open(args.out, "w", encoding="utf-8", newline="\n") as handle:
         json.dump(payload, handle, indent=2, sort_keys=True)
         handle.write("\n")
     print("wrote", os.path.relpath(args.out, REPO_ROOT))

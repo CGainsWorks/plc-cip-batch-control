@@ -3,8 +3,15 @@
 What a food-safety auditor asks for after a cleaning cycle is not "did the
 program finish" but "what were the time, action, concentration and temperature
 and who says so". This module turns the PLC's own gResults array into that
-document and chains each record to the previous one by hash so a record cannot
-be quietly edited or dropped from the middle of the run.
+document and chains each record to the previous one by SHA-256, so an edit to a
+record, or a record dropped from the middle of a run, breaks the chain.
+
+That makes the records tamper-evident, not signed. The chain has no key: anyone
+who can rewrite the files can recompute every hash after the one they changed,
+so it only shows tampering by someone who does not, or against a latest hash
+that is kept somewhere they cannot reach. Nothing in a record says who
+produced it. Electronic signatures in the 21 CFR Part 11 sense would need a key
+per operator and a trusted time source; docs/limitations.md lists both.
 
 Nothing here carries a wall-clock timestamp: the whole point of the simulation
 is that a rerun reproduces the file byte for byte and a real installation
@@ -19,7 +26,7 @@ import json
 import os
 from typing import Any, Dict, List, Optional, Sequence
 
-SCHEMA = "cip-batch-record/1"
+SCHEMA = "cip-batch-record/2"  # 2: signature fields renamed to what they are
 GENESIS = "0" * 64
 
 # The criteria a phase has to meet, in the order an auditor reads them.
@@ -30,7 +37,8 @@ def canonical(record: Dict[str, Any]) -> str:
     return json.dumps(record, sort_keys=True, separators=(",", ":"))
 
 
-def sign(record: Dict[str, Any], previous: str) -> str:
+def chain_hash(record: Dict[str, Any], previous: str) -> str:
+    """SHA-256 of the canonical record and the previous record's hash. No key."""
     payload = canonical(record) + "|" + previous
     return hashlib.sha256(payload.encode("utf-8")).hexdigest()
 
@@ -38,12 +46,12 @@ def sign(record: Dict[str, Any], previous: str) -> str:
 def build(
     result: Any,
     recipe: Dict[str, Any],
-    previous_signature: str = GENESIS,
+    previous_hash: str = GENESIS,
     residual_limit_g_m2: float = 1.0,
     chemical_limit_ppm: float = 50.0,
     notes: Optional[Sequence[str]] = None,
 ) -> Dict[str, Any]:
-    """Assemble a signed record from one CycleResult."""
+    """Assemble a hash-chained record from one CycleResult."""
     phases = []
     for phase in result.phases:
         entry = dict(phase)
@@ -122,31 +130,31 @@ def build(
         },
         "notes": list(notes or []),
     }
-    body["previous_signature"] = previous_signature
-    body["signature"] = sign(body, previous_signature)
+    body["previous_hash"] = previous_hash
+    body["record_hash"] = chain_hash(body, previous_hash)
     return body
 
 
 def verify_chain(records: Sequence[Dict[str, Any]]) -> List[str]:
-    """Recompute every signature. Returns a list of problems, empty if sound."""
+    """Recompute every hash in the chain. Returns a list of problems, empty if sound."""
     problems: List[str] = []
     expected_previous = GENESIS
     for index, record in enumerate(records):
-        body = {k: v for k, v in record.items() if k != "signature"}
-        recomputed = sign(body, record.get("previous_signature", ""))
-        if record.get("previous_signature") != expected_previous:
+        body = {k: v for k, v in record.items() if k != "record_hash"}
+        recomputed = chain_hash(body, record.get("previous_hash", ""))
+        if record.get("previous_hash") != expected_previous:
             problems.append(
                 "record {0} (batch {1}) does not follow the previous record".format(
                     index, record.get("batch_id")
                 )
             )
-        if recomputed != record.get("signature"):
+        if recomputed != record.get("record_hash"):
             problems.append(
-                "record {0} (batch {1}) signature does not match its contents".format(
+                "record {0} (batch {1}) hash does not match its contents".format(
                     index, record.get("batch_id")
                 )
             )
-        expected_previous = record.get("signature", "")
+        expected_previous = record.get("record_hash", "")
     return problems
 
 
@@ -154,7 +162,7 @@ def write(directory: str, record: Dict[str, Any], filename: Optional[str] = None
     os.makedirs(directory, exist_ok=True)
     name = filename or "batch-{0:04d}.json".format(record["batch_id"])
     path = os.path.join(directory, name)
-    with open(path, "w", encoding="utf-8") as handle:
+    with open(path, "w", encoding="utf-8", newline="\n") as handle:
         json.dump(record, handle, indent=2, sort_keys=True)
         handle.write("\n")
     return path

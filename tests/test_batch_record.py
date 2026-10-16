@@ -98,8 +98,8 @@ def test_a_failed_phase_is_named_in_the_reasons():
 
 def test_the_chain_verifies_and_tampering_is_detected():
     first = batch_record.build(FakeResult(batch_id=1), RECIPE)
-    second = batch_record.build(FakeResult(batch_id=2), RECIPE, previous_signature=first["signature"])
-    third = batch_record.build(FakeResult(batch_id=3), RECIPE, previous_signature=second["signature"])
+    second = batch_record.build(FakeResult(batch_id=2), RECIPE, previous_hash=first["record_hash"])
+    third = batch_record.build(FakeResult(batch_id=3), RECIPE, previous_hash=second["record_hash"])
     chain = [first, second, third]
     assert batch_record.verify_chain(chain) == []
 

@@ -126,7 +126,7 @@
       "water_l": 820.3
     }
   ],
-  "previous_signature": "db8c130df6ea9c87b8b4eef18567206c3bbd0c8d8168968f1dfc2d1764d85526",
+  "previous_hash": "6a792180f750fd61e9d056c8861e6a5f06fff9cace8a3b3d4add591120caf051",
   "recipe": {
     "adaptive": false,
     "caustic_conc_sp_pct": 2.0,
@@ -138,6 +138,7 @@
     "use_acid": true,
     "use_sanitise": false
   },
+  "record_hash": "b0aa1780a04ae43caa5d0d37e40b3fff19844c9faf585ea01baca64d2de9544d",
   "release": {
     "decision": "HELD",
     "reasons": [
@@ -145,8 +146,7 @@
     ],
     "verified_clean": false
   },
-  "schema": "cip-batch-record/1",
-  "signature": "de1997cb27ee23d95b02aa981b1ba4cc4ab8462d1d1ab241115ffb0b83b160c1",
+  "schema": "cip-batch-record/2",
   "soil_scenario": "medium",
   "unit": "CIP-01"
 }
