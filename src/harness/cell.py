@@ -1,7 +1,7 @@
 """The simulated cell: one PLC, one plant, one scan loop.
 
-Each cycle of `step()` is a real PLC scan in the right order -- read the input
-image, execute the task, write the output image -- followed by one integration
+Each cycle of `step()` is a real PLC scan in the right order (read the input
+image, execute the task, write the output image) followed by one integration
 step of the plant. The PLC never touches the model directly; everything it
 knows comes through the located variables listed in GVL_Io.st.
 """
@@ -11,7 +11,7 @@ from __future__ import annotations
 import json
 import os
 from dataclasses import asdict, dataclass, field
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, List, Optional, Union
 
 from ..iec61131.runtime import Runtime, load
 from ..plant.model import CipPlant, Faults, Outputs
@@ -23,6 +23,20 @@ PLC_DIR = os.path.join(REPO_ROOT, "plc")
 CONFIG_DIR = os.path.join(REPO_ROOT, "config")
 
 PROGRAM_ORDER = ("PRG_Safety", "PRG_Sequence", "PRG_Control", "PRG_Alarms", "PRG_Kpi")
+
+# What executes the ST. "interpreter" is src/iec61131; "rusty" is the same
+# source compiled to machine code by RuSTy (see src/harness/compiled.py).
+BACKENDS = ("interpreter", "rusty")
+
+
+def make_runtime(backend: str = "interpreter", plc_dir: str = PLC_DIR) -> Any:
+    if backend == "interpreter":
+        return load(plc_dir, PROGRAM_ORDER)
+    if backend == "rusty":
+        from .compiled import CompiledRuntime
+
+        return CompiledRuntime(plc_dir, PROGRAM_ORDER)
+    raise ValueError("unknown backend {0!r}; expected one of {1}".format(backend, BACKENDS))
 
 # PLC output tag -> field of the plant's Outputs image.
 OUTPUT_BINDING = {
@@ -145,6 +159,38 @@ def load_recipes(path: Optional[str] = None) -> Dict[str, Dict[str, Any]]:
         return json.load(handle)
 
 
+def fast_recipe(base: str = "adaptive", **overrides):
+    """A cut-down recipe so a sequencing test is seconds rather than a minute.
+
+    Holds and temperatures are trimmed, not removed: the point is to exercise
+    the phase order, the interlocks and the fault paths without simulating a
+    forty-five minute heat-up every time. The consumption figures in results/
+    come from the real recipes in config/recipes.json.
+    """
+    recipe = dict(load_recipes()[base])
+    recipe.update(
+        {
+            "name": "test-fast",
+            "pre_rinse_s": 60,
+            "caustic_temp_sp_c": 45.0,
+            "caustic_temp_min_c": 40.0,
+            "caustic_hold_s": 60,
+            "int_rinse_s": 60,
+            "acid_temp_sp_c": 40.0,
+            "acid_temp_min_c": 35.0,
+            "acid_hold_s": 60,
+            "final_rinse_s": 60,
+            "sanitise_temp_sp_c": 50.0,
+            "sanitise_temp_min_c": 45.0,
+            "sanitise_hold_s": 60,
+            "rinse_max_s": 420,
+            "phase_max_s": 1200,
+        }
+    )
+    recipe.update(overrides)
+    return recipe
+
+
 @dataclass
 class Sample:
     t_s: float
@@ -204,20 +250,27 @@ class CipCell:
         plc_dir: str = PLC_DIR,
         sample_every_s: float = 5.0,
         external_commands: bool = False,
+        backend: Optional[str] = None,
     ):
-        self.runtime: Runtime = load(plc_dir, PROGRAM_ORDER)
+        # CIP_BACKEND=rusty runs anything built on CipCell, the whole slow test
+        # suite included, against the compiled program instead.
+        backend = backend or os.environ.get("CIP_BACKEND", "interpreter")
+        self.backend = backend
+        self.runtime: Union[Runtime, Any] = make_runtime(backend, plc_dir)
         self.io_map: IoMap = build_io_map(self.runtime)
         self.plant = CipPlant(params, scenario, faults)
         self.recipe = recipe
         self.scenario = scenario
-        self.scan_s = float(self.runtime.get_path("C_CYCLE_S"))
+        # C_CYCLE_S is a REAL. Compiled, that is 0.2000000030; the harness runs
+        # the period the constant means, not its single-precision image.
+        self.scan_s = round(float(self.runtime.get_path("C_CYCLE_S")), 6)
         self.outputs = Outputs()
         self.samples: List[Sample] = []
         self._sample_every = max(int(round(sample_every_s / self.scan_s)), 1)
         self._commands = dict.fromkeys(COMMAND_TAGS, False)
         self._pulse: Dict[str, int] = {}
-        # When something else drives the command coils -- the Modbus bridge or
-        # the HMI -- the harness must not write them every scan or it would
+        # When something else drives the command coils (the Modbus bridge or
+        # the HMI) the harness must not write them every scan or it would
         # stamp on whatever the client just wrote.
         self.external_commands = external_commands
         self._apply_recipe(recipe)

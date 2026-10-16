@@ -30,7 +30,7 @@ fi
 
 WORK=$(mktemp -d)
 trap 'rm -rf "$WORK"' EXIT
-git clone --quiet --depth 1 --branch "$TAG" https://github.com/PLC-lang/rusty.git "$WORK/rusty"
+git -c advice.detachedHead=false clone --quiet --depth 1 --branch "$TAG" https://github.com/PLC-lang/rusty.git "$WORK/rusty"
 cd "$WORK/rusty"
 git log -1 --format='rusty %H %s'
 
@@ -60,6 +60,10 @@ PY
 git --no-pager diff --stat
 
 cargo build --release --package iec61131std --features mock_time
-cp target/release/libiec61131std.so "$OUT/"
+# Packaged the way upstream packages its release (create_shared_library in
+# scripts/build.sh): the shared object is the whole static archive, which is
+# what exports the ST-implemented functions as well as the Rust ones.
+cc --shared -Wl,--whole-archive target/release/libiec61131std.a -Wl,--no-whole-archive \
+    -lm -o "$OUT/libiec61131std.so"
 nm -D --defined-only "$OUT/libiec61131std.so" | grep -q __mock_time_advance_ns
 echo "built $OUT/libiec61131std.so with mock_time"

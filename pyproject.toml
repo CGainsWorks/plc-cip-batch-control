@@ -24,6 +24,7 @@ testpaths = ["tests"]
 addopts = "-q --strict-markers"
 markers = [
     "slow: runs a full CIP cycle, tens of seconds each",
+    "compiled: needs the RuSTy build of plc/ (Linux, see scripts/rusty)",
 ]
 
 [tool.ruff]

@@ -77,35 +77,6 @@ def harness_factory():
     return build_harness
 
 
-def fast_recipe(base: str = "adaptive", **overrides):
-    """A cut-down recipe so a sequencing test is seconds rather than a minute.
-
-    Holds and temperatures are trimmed, not removed: the point is to exercise
-    the phase order, the interlocks and the fault paths without simulating a
-    forty-five minute heat-up every time. The consumption figures in results/
-    come from the real recipes in config/recipes.json.
-    """
-    from src.harness.cell import load_recipes
-
-    recipe = dict(load_recipes()[base])
-    recipe.update(
-        {
-            "name": "test-fast",
-            "pre_rinse_s": 60,
-            "caustic_temp_sp_c": 45.0,
-            "caustic_temp_min_c": 40.0,
-            "caustic_hold_s": 60,
-            "int_rinse_s": 60,
-            "acid_temp_sp_c": 40.0,
-            "acid_temp_min_c": 35.0,
-            "acid_hold_s": 60,
-            "final_rinse_s": 60,
-            "sanitise_temp_sp_c": 50.0,
-            "sanitise_temp_min_c": 45.0,
-            "sanitise_hold_s": 60,
-            "rinse_max_s": 420,
-            "phase_max_s": 1200,
-        }
-    )
-    recipe.update(overrides)
-    return recipe
+# The cut-down recipe lives with the harness so scripts/crosscheck_compiled.py
+# can run the same scenarios the tests do.
+from src.harness.cell import fast_recipe  # noqa: E402, F401
