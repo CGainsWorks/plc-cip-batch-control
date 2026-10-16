@@ -1,4 +1,4 @@
-"""PLCopen TC6 XML (v2.01) export of plc/, and the way back.
+"""PLCopen TC6 XML (v2.01) export of plc/ and the way back.
 
 `export()` writes the data types, the function blocks, functions and programs
 and one configuration with a 200 ms cyclic task calling the five programs in

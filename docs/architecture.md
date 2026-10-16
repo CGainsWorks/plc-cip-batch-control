@@ -4,18 +4,23 @@ Four things live in this repository and the boundaries between them are the
 point:
 
 ```
-plc/            IEC 61131-3 Structured Text -- the deliverable
+plc/            IEC 61131-3 Structured Text: the deliverable
 src/iec61131/   an ST front end and scan-cycle interpreter
 src/plant/      a first-principles model of the skid
 src/harness/    the wiring: one PLC, one plant, one scan loop
 src/services/   Modbus TCP and an operator page, fed from the PLC image
 ```
 
+The PLC in "one PLC" is either the interpreter or the same ST compiled to
+native code by RuSTy (`src/harness/compiled.py`); the harness, the plant and
+the services cannot tell which. See [compiled_crosscheck.md](compiled_crosscheck.md).
+
 The controller cannot see the model. Everything it knows arrives through the
 located variables declared in [plc/types/GVL_Io.st](../plc/types/GVL_Io.st)
-and everything it does leaves the same way. Take the interpreter out, download
-the same ST to a real PLC and the only thing that changes is what is on the
-other side of the terminals.
+and everything it does leaves the same way. The compiled build is exactly that
+experiment: take the interpreter out, put RuSTy's machine code in and nothing
+else changes. Download the same ST to a real PLC and the only thing that
+changes is what is on the other side of the terminals.
 
 ## The scan
 
@@ -29,7 +34,7 @@ other side of the terminals.
                     |  PRG_Alarms    ISA-18.2 alarm list        |
                     |  PRG_Kpi       totals, record, SCADA image|
                     |                                           |
-                    |  output image     %QX0.0 .. %MD19         |
+                    |  output image     %QX2.0 .. %MD19         |
                     +-------------------------------------------+
    plant.step(dt, outputs)  <-----------------------------------+
 ```

@@ -96,7 +96,7 @@ continuous seconds, subject to two guards:
 * **A blanking time.** The return element sits downstream of the whole circuit,
   so a rinse that stops after twenty seconds has only measured the water that
   was already in the pipe. The minimum is one and a half circuit turnovers at
-  the recipe flow -- 135 seconds for this circuit at 18 m³/h -- computed by the
+  the recipe flow (135 seconds for this circuit at 18 m³/h), computed by the
   controller from the circuit volume rather than typed into the recipe.
 * **A maximum time.** If the endpoint is not reached, the phase fails with
   `RINSE_NOT_CLEAN` rather than running on, so a conductivity element stuck at

@@ -1,9 +1,11 @@
 # Limitations and what commissioning on real hardware would need
 
-**There is no hardware.** The ST is real and it runs but it runs on an
-interpreter written for this repository against a model written for this
-repository. That is worth being precise about, because the difference between
-"this logic is sound" and "this logic is proven" is the whole of commissioning.
+**There is no hardware.** The ST is real and it runs, on an interpreter
+written for this repository and, compiled by RuSTy, as native code driven by a
+harness written for this repository, in both cases against a model written for
+this repository. That is worth being precise about, because the difference
+between "this logic is sound" and "this logic is proven" is the whole of
+commissioning.
 
 ## What is genuinely demonstrated
 
@@ -13,6 +15,10 @@ repository. That is worth being precise about, because the difference between
   dividend, structures assign by value and the standard timers and counters
   behave as the standard says. The contract is
   [tests/test_st_language.py](../tests/test_st_language.py).
+* An independent compiler accepts it. RuSTy 1.0.6 compiles all of `plc/` with
+  no diagnostics and the compiled program passes the same end-to-end suite and
+  agrees with the interpreter on eighteen scenarios, with the differences
+  explained in [compiled_crosscheck.md](compiled_crosscheck.md).
 * The sequence, the interlocks, the alarm state model and the release logic
   behave correctly against a plant that conserves mass and energy, has a real
   transport delay and fails in the ways plants fail.
@@ -24,45 +30,63 @@ repository. That is worth being precise about, because the difference between
 
 ## What is not
 
-### The interpreter is not a certified compiler
+### Neither execution is a PLC
 
 `src/iec61131` implements the subset this project uses and no more. It has no
 `SFC`, no `LD`, no `FBD`, no `ACTION`, no `METHOD`, no `INTERFACE`, no
 `POINTER`, no `REF_TO`, no `ANY` generics, no `TIME_OF_DAY` or `DATE`, no
 retained-variable semantics across a power cycle, no multi-task configuration
-and no `VAR_EXTERNAL`. Its STRING handling is minimal. It has not been run
-against a conformance suite.
+and no `VAR_EXTERNAL`. Its STRING handling is minimal. It holds REAL in double
+precision where the standard says single; the compiled cross-check measured
+what that changes. It has not been run against a conformance suite.
 
-The practical consequence: the ST here is portable in style but has not been
-compiled by a vendor toolchain. **Before anything is downloaded to a
-controller, the whole of `plc/` has to be compiled by the target toolchain and
-the differences dealt with.** Expected work: enumeration and structure syntax
-differences between vendors, `TIME` handling (this project keeps TIME in
-seconds internally and `TIME_TO_REAL` returns milliseconds, matching CODESYS)
-and the `AT %...` addressing convention, which differs between CODESYS-style
-indexing and Siemens-style byte offsets.
+RuSTy is a real compiler. It is not a PLC runtime. The compiled program
+runs under [src/harness/compiled.py](../src/harness/compiled.py), which
+provides the I/O image, the task and a simulated clock. Real task scheduling,
+jitter, I/O update timing, retentive memory and watchdogs are exercised by
+neither execution.
 
-A sensible next step would be building the same source with
-[MatIEC](https://github.com/nucleron/matiec) -- the ST to C compiler OpenPLC
-uses -- and running it under the OpenPLC runtime against the same plant model
-over Modbus. That would turn "a purpose-built interpreter executes this" into
-"a third-party compiler accepts this", which is a meaningfully stronger claim.
+The practical consequence: the ST is now compiled by an independent toolchain
+but not by a vendor's. **Before anything is downloaded to a controller, the
+whole of `plc/` has to be compiled by the target toolchain and the differences
+dealt with.** The RuSTy build found the kinds of thing to expect: a TIME
+conversion whose unit differs between compilers (now written to be
+unit-independent), enumerations assigned to INT, a process image that does not
+keep `%I` and `%Q` apart and a TON that is one scan later than the standard's
+timing diagram at `PT = T#0s`. The `AT %...` convention itself also differs
+between CODESYS-style indexing and Siemens-style byte offsets. A
+[PLCopen XML export](plcopen.md) exists to start a vendor project from; it has
+not been imported into CODESYS or TwinCAT.
 
-### The model is structurally sound and numerically fitted
+MatIEC and the OpenPLC runtime, the route this page used to suggest, were not
+attempted: MatIEC follows the standard's scoping, with globals in a
+`CONFIGURATION` and `VAR_EXTERNAL` in every POU that uses them, while `plc/`
+uses CODESYS-style global variable lists.
+
+### Elapsed time is accumulated in REAL
+
+The phase engine and the KPI program add the scan period to a REAL every scan.
+In single precision that loses time: 25 additions of 0.2 make 4.9999995, so a
+five-second step takes one scan too many. The cross-check measured up to 2.2 s
+of drift over a full cycle. On a real controller elapsed time belongs in `TIME`
+or a DINT scan count; changing it here would move every committed figure by a
+scan or two and has been left as a known limitation.
+
+### The model is first-principles in structure; its coefficients are not fitted
 
 The structure of [model.py](../src/plant/model.py) is first-principles:
 conservation of mass and energy, tanks in series, Arrhenius kinetics, a
 Michaelis-type concentration term, a wall-shear term. The **coefficients** are
 plausible figures chosen so that the model behaves the way CIP practice says
-cleaning behaves -- a 2 % caustic wash at 75 °C and 1.75 m/s cleans a normal
+cleaning behaves: a 2 % caustic wash at 75 °C and 1.75 m/s cleans a normal
 soil in about ten minutes, a cold water rinse removes loose soil and nothing
 else, a 1 % acid wash removes scale. They are not fitted to measurements from a
 particular plant and the removal rates in particular would need
 re-identification against swab or riboflavin results on the real circuit.
 
-So: the 23 % water saving is a property of this model. The *mechanism* -- a
+So: the 23 % water saving is a property of this model. The *mechanism* (a
 rinse that stops when the water is clean uses less water than a rinse sized for
-the worst case -- is general. The number is not.
+the worst case) is general. The number is not.
 
 ### The release limits are assumptions, not standards
 
@@ -87,8 +111,8 @@ would cross it with the controller still reporting every phase as passed.
 
 What catches that in the real world is cleaning validation and what the
 controller contributes is the batch record: the verified hold, minimum
-temperature, mean concentration and minimum flow it actually achieved, signed
-and chained, so a recipe change can be argued about with evidence. Automation
+temperature, mean concentration and minimum flow it actually achieved,
+hash-chained, so a recipe change can be argued about with evidence. Automation
 does not remove the validation step. It makes the validation argument
 checkable.
 
@@ -112,6 +136,12 @@ checkable.
 * **Wall-clock time.** Batch records carry simulated time only, so a rerun
   reproduces them byte for byte. A real installation would stamp them from the
   controller clock and the chain would need a trusted time source.
+* **Electronic signatures.** The batch records are hash-chained, not signed.
+  The chain has no key: anyone who can rewrite the files can recompute it, so
+  it shows tampering only against a latest hash kept somewhere else, and
+  nothing in a record says who produced or approved it. Records in the 21 CFR Part 11 or EU Annex 11 sense
+  would need a signing key per operator, held outside the controller and an
+  approval step.
 * **Security.** The Modbus server has no authentication, because Modbus TCP has
   none. On a real site it belongs on an isolated control network behind a
   firewall, not on an office LAN.

@@ -4,12 +4,18 @@
 
 An IEC 61131-3 Structured Text controller for a clean-in-place skid: the
 machine that washes a dairy or brewery vessel between production runs. ISA-88
-phase engine, ISA-18.2 alarm list, interlocks, two closed loops and a signed
-batch record of what the cycle actually achieved.
+phase engine, ISA-18.2 alarm list, interlocks, two closed loops and a
+hash-chained batch record of what the cycle actually achieved.
 
 It runs. There is no hardware, so the repository also contains a Structured
 Text front end that executes the same `.st` source a controller would be given
-and a first-principles model of the skid for it to be connected to.
+and a first-principles model of the skid for it to be connected to. The same
+source is also compiled to native code by [RuSTy](https://github.com/PLC-lang/rusty),
+an independent IEC 61131-3 compiler. CI runs that build against the same
+plant and checks it agrees with the interpreter
+([docs/compiled_crosscheck.md](docs/compiled_crosscheck.md)). A
+[PLCopen XML export](docs/plcopen.md) carries the project towards CODESYS or
+TwinCAT; neither has been run.
 
 ```mermaid
 flowchart LR
@@ -90,7 +96,7 @@ minutes of verified hold at 2 % and 75 °C and it delivered exactly that.
 > **The controller verifies conformance to the recipe. It cannot tell that a
 > recipe is inadequate.** What it contributes is evidence: the verified hold,
 > minimum temperature, mean concentration and minimum flow it actually
-> achieved, signed and hash-chained, so a recipe change can be argued about
+> achieved, hash-chained, so a recipe change can be argued about
 > with numbers instead of opinions.
 
 ![Where the cycle time goes](results/phase_timeline.svg)
@@ -211,6 +217,7 @@ one answer.
 ```
 plc/                    the deliverable: ~2000 lines of Structured Text
   types/                enumerations, structures, the global variable lists
+  fn/                   TIME to seconds and back, the same on every compiler
   fb/                   FB_CipPhase, FB_UnitStateMachine, FB_Pid, FB_Pump,
                         FB_Alarm, FB_Totaliser
   prog/                 PRG_Safety, PRG_Sequence, PRG_Control, PRG_Alarms,
@@ -218,12 +225,18 @@ plc/                    the deliverable: ~2000 lines of Structured Text
 src/iec61131/           a Structured Text lexer, parser and scan-cycle
                         interpreter
 src/plant/              the skid: hydraulics, heat, conductivity, soil kinetics
-src/harness/            one PLC, one plant, one scan loop; the I/O map
+src/harness/            one PLC, one plant, one scan loop; the I/O map; the
+                        loader for the RuSTy-compiled program
 src/services/           Modbus TCP server and the operator page
 src/report/             batch records with a hash chain and the SVG charts
-tests/                  137 tests, from the sign of MOD to a pump trip mid-wash
-results/                committed figures and twelve signed batch records
-docs/                   control narrative, I/O map, model, alarms, limitations
+src/export/             PLCopen TC6 XML export and read-back
+scripts/rusty/          build the RuSTy standard library and compile plc/
+export/plcopen/         the generated PLCopen XML
+tests/                  150 tests, from the sign of MOD to a pump trip mid-wash
+results/                committed figures, twelve hash-chained batch records
+                        and the interpreter against compiled comparison
+docs/                   control narrative, I/O map, model, alarms, limitations,
+                        the compiled cross-check, the PLCopen export
 ```
 
 ### The Structured Text front end
@@ -243,10 +256,40 @@ behaves the same at a 20 ms scan as at 200 ms.
 [tests/test_st_language.py](tests/test_st_language.py) is the contract.
 
 **It is not a certified compiler.** No SFC, no ladder, no pointers, no
-conformance suite. Before anything reached a controller the whole of `plc/`
-would have to be compiled by the target vendor toolchain and the differences
-dealt with. [docs/limitations.md](docs/limitations.md) is specific about this
-and about what else would have to happen.
+conformance suite. It holds REAL in double precision where the standard
+says single. Before anything reached a controller the whole of `plc/` would
+have to be compiled by the target vendor toolchain and the differences dealt
+with. [docs/limitations.md](docs/limitations.md) is specific about this and
+about what else would have to happen.
+
+### The same source, compiled by RuSTy
+
+`plc/` also compiles, with no warnings, under
+[RuSTy](https://github.com/PLC-lang/rusty) 1.0.6, an LLVM-based IEC 61131-3
+compiler, to a native shared object. `CIP_BACKEND=rusty` (or
+`CipCell(..., backend="rusty")`) runs that machine code against the same plant
+model, I/O map, Modbus server and operator page, with RuSTy's own standard
+library built with its `mock_time` clock so timers follow simulated time.
+
+In CI the compiled program passes the whole end-to-end suite and
+[scripts/crosscheck_compiled.py](scripts/crosscheck_compiled.py) runs eighteen
+scenarios on both executions: the same transitions, verdicts, alarms and
+release decisions on all eighteen, with timing drift of at most 7.2 s in a
+cut-down rinse and 2.2 s on the real recipes. Getting there found four things,
+all written up in [docs/compiled_crosscheck.md](docs/compiled_crosscheck.md):
+a TIME conversion whose unit differs between compilers, RuSTy keeping `%I` and
+`%Q` in one process image (outputs were overwriting inputs; the address map now
+keeps their numbers apart), a TON that is one scan later at `PT = T#0s` and
+single against double precision REAL.
+
+Linux only, since it builds an ELF shared object:
+
+```bash
+scripts/rusty/build_stdlib.sh v1.0.6 ~/rusty/stdlib   # needs cargo and plc 1.0.6
+make rusty                                            # compile plc/ into build/rusty
+CIP_BACKEND=rusty python scripts/run_cycle.py --recipe adaptive
+make crosscheck
+```
 
 ### The I/O map has one source of truth
 
@@ -257,7 +300,7 @@ coil is one line of ST.
 
 ```
 %IXb.i -> discrete input  b*8+i      %IDn -> input registers 2n, 2n+1
-%QXb.i -> coil            b*8+i      %QDn -> holding registers 2n, 2n+1
+%QXb.i -> coil            b*8+i      %QDn -> holding registers 2n, 2n+1   (outputs from %QX2.0, %QD16)
 %MXb.i -> coil     1000 + b*8+i      %MWn -> holding register 1000+n
 ```
 
@@ -294,28 +337,38 @@ the controller's release decision, never to inform it.
 
 ### The batch record
 
-One signed JSON document per cycle
+One JSON document per cycle
 ([example](results/batch_records/10-adaptive-medium.json)), hash-chained to the
-one before it so a record cannot be quietly edited or dropped from the middle
-of a run. It carries the recipe, the verified hold and its four criteria per
+one before it so an edit, or a record dropped from the middle of a run, breaks
+the chain. It carries the recipe, the verified hold and its four criteria per
 phase, consumption, the alarm history, the release decision with its reasons
 and the independent check.
+
+**Tamper-evident, not signed.** The chain is SHA-256 with no key: anyone who
+can rewrite the files can recompute it, so it only shows tampering against a
+latest hash kept somewhere else. Nothing in a record says who produced it.
+Signatures in the 21 CFR Part 11 sense would need a key per operator; see
+[docs/limitations.md](docs/limitations.md).
 
 ---
 
 ## Verification
 
 ```bash
-make test        # 114 unit tests, a few seconds
-make test-all    # plus 23 end-to-end cycles with fault injection
+make test        # 126 unit tests, a few seconds (5 of them need the RuSTy build)
+make test-all    # plus 24 end-to-end cycles with fault injection
 ```
 
 [CI](.github/workflows/ci.yml) runs the lint, the whole suite, the generated
-I/O map check, one re-run of a committed cell of the sweep with the batch-record
-chain verified and a live start of the Modbus and HTTP servers that drives a
-cycle and shuts itself down. The sweep is deterministic (seeded noise, no
-wall-clock time in any output), so a re-run has to land on the committed
-numbers or the build fails.
+I/O map check, the PLCopen export check and schema validation, one re-run of a
+committed cell of the sweep with the batch-record chain verified and a live
+start of the Modbus and HTTP servers that drives a cycle and shuts itself down.
+The sweep is deterministic (seeded noise, no wall-clock time in any output), so
+a re-run has to land on the committed numbers or the build fails.
+
+A second job, alongside it, compiles `plc/` with RuSTy and runs the compiled
+program through the end-to-end suite, the eighteen-scenario cross-check and the
+same Modbus and HTTP smoke test.
 
 Everything that needs the full picture is in one job, because with nothing to
 install a second job would cost more in runner start-up than it saved in wall
@@ -330,7 +383,7 @@ release, no steam, a derated heater, a conductivity element frozen clean, the
 same element frozen dirty. Each asserts what the controller does about it and
 each is a test that would be re-run against the real machine.
 
-### Four things the tests caught
+### Five things the tests caught
 
 Worth listing, because this is what the suite is for:
 
@@ -354,6 +407,13 @@ Worth listing, because this is what the suite is for:
   previous scan. The two signals aliased. Gating on the source selection
   instead fixed it. The test that found it compares the controller's own
   totals against the volumes the model actually moved.
+* **Outputs that overwrote inputs, once compiled.** The first test of the
+  RuSTy build saw the safety relay input fall to FALSE one scan after it was
+  set, with nothing in the ST writing it. RuSTy names the storage behind
+  `%IX0.0` and `%QX0.0` from the numbers alone, so writing the fresh water
+  valve wrote the safety relay input. The interpreter keeps the areas apart,
+  as the standard does, so only the compiled run could show it. Inputs and
+  outputs now use disjoint numbers and a test keeps them that way.
 
 ---
 

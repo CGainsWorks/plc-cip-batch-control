@@ -1,8 +1,8 @@
 """Physical parameters for the simulated skid.
 
 Every number here is a plant property, not a control parameter: the PLC never
-reads this file. The few figures that appear on both sides -- balance tank
-capacity, dosing pump rate -- are checked against the ST constants by
+reads this file. The few figures that appear on both sides (balance tank
+capacity, dosing pump rate) are checked against the ST constants by
 tests/test_io_map.py, because a controller that thinks the tank is a different
 size from the tank is a real and unpleasant class of bug.
 

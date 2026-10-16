@@ -36,7 +36,7 @@ All of these run in CI on every push:
    from the Beremiz repository at a pinned commit and checked by SHA-256)
    with `xmllint`.
 3. It is read back into `.st` files. Those load in the interpreter with the
-   same 134 globals and 66 located variables at the same addresses, and they
+   same 134 globals and 66 located variables at the same addresses. They
    compile with no diagnostics at all under RuSTy, the same compiler that
    builds `plc/` in the `rusty` job.
 
@@ -50,7 +50,7 @@ rather than from a trial:
 
 * CODESYS keeps global variable lists as separate objects and builds its task
   configuration itself; the configuration and task here may be ignored or
-  need recreating, and the call order of the five programs must then be set
+  need recreating. The call order of the five programs must then be set
   by hand.
 * TwinCAT imports POUs and data types into a PLC project but takes the task
   from the TwinCAT system configuration, not from the XML.

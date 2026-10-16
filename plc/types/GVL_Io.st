@@ -10,9 +10,9 @@
 
     Inputs and outputs never share a number: inputs own bytes 0 and 1 and
     double words 0 to 15, outputs start at byte 2 and double word 16. IEC
-    61131-3 keeps %I and %Q apart, but some runtimes back both with one
+    61131-3 keeps %I and %Q apart but some runtimes back both with one
     process image keyed by the number alone (RuSTy does, see
-    docs/compiled_crosscheck.md), and there %IX0.0 and %QX0.0 would be the same
+    docs/compiled_crosscheck.md); there %IX0.0 and %QX0.0 would be the same
     bit. Keeping the numbers disjoint costs nothing and works on both kinds.
 *)
 

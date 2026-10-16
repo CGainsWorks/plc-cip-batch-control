@@ -13,7 +13,7 @@ Soil is three pools with different chemistry:
     mineral   scale, needs acid
 
 Each pool follows first-order kinetics with an Arrhenius temperature term, a
-Michaelis-type concentration term and a wall-shear term in velocity -- the
+Michaelis-type concentration term and a wall-shear term in velocity: the
 usual time, action, concentration, temperature decomposition, written out.
 
 Nothing in this module is visible to the PLC except through `sensors()`.
@@ -155,8 +155,8 @@ class Cell:
 
         Mix first, then take the outflow from the mixture: the cell briefly
         holds volume + inflow and the fraction leaving is inflow/(volume +
-        inflow). Written the other way round -- taking the outflow from the
-        pre-mix contents -- the chain leaks mass on every step, which shows up
+        inflow). Written the other way round, taking the outflow from the
+        pre-mix contents, the chain leaks mass on every step, which shows up
         as a circuit that swallows caustic and returns clean water.
         """
         volume = parcel.volume_l

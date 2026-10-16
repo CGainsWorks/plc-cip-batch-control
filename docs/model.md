@@ -25,8 +25,8 @@ prediction of what a particular dairy would save.
 | Caustic concentrate | 25 % w/w NaOH, 1.27 kg/L, 30 L/min | positive displacement |
 | Acid concentrate | 30 % w/w HNO₃, 1.18 kg/L, 20 L/min | positive displacement |
 
-The three figures the controller also holds -- balance tank volume and the two
-dosing rates -- are asserted equal in
+The three figures the controller also holds (balance tank volume and the two
+dosing rates) are asserted equal in
 [tests/test_io_map.py](../tests/test_io_map.py). A controller that thinks the
 tank is a different size from the tank is a real commissioning bug.
 
@@ -48,7 +48,7 @@ on every step, which showed up as a circuit that swallowed caustic and returned
 clean water; `test_a_closed_loop_conserves_volume_and_chemical` exists because
 of it.
 
-Twenty cells gives a transport delay of V/Q -- 90 s at 18 m³/h -- with roughly
+Twenty cells gives a transport delay of V/Q (90 s at 18 m³/h) with roughly
 1/√20 ≈ 22 % dispersion, so a step change at the heat exchanger arrives at the
 return element spread over about twenty seconds rather than as a square edge.
 The adaptive rinse logic terminates on exactly that signal, which is why the
@@ -74,8 +74,8 @@ The circuit term is the one that matters: at a 75 °C wash it costs about 3.5 K
 between supply and return, which is why the recipe's 70 °C minimum is measured
 on the return rather than the supply.
 
-The controller computes its own energy figure from the instruments it has --
-`m³/h × 1000/3600 × 4.19 × (T_supply − T_tank)` -- and
+The controller computes its own energy figure from the instruments it has,
+`m³/h × 1000/3600 × 4.19 × (T_supply − T_tank)`, and
 `scripts/run_experiments.py` records both. They agree to about 0.1 %, which is
 the check that the KPI code is reading the plant rather than inventing numbers.
 
@@ -91,7 +91,7 @@ single-point calibration wrong at the other end of the range: a 1 % caustic
 solution reads 50 mS/cm and a 2 % solution 94, not 106.
 
 The controller does **not** know that curve. It divides by a two-point
-calibration constant -- 47 mS/cm per % for caustic, 45 for acid -- which is
+calibration constant (47 mS/cm per % for caustic, 45 for acid), which is
 exactly right at the calibration point and increasingly wrong away from it.
 That mismatch between the instrument and the controller's model of the
 instrument is deliberate; it is the normal state of affairs on a real skid.
@@ -110,7 +110,7 @@ Three pools with different chemistry, distributed evenly over the cells:
 | Bound (protein, fat) | hot caustic | 0.0088 s⁻¹ | 2 % NaOH, 75 °C, 1.5 m/s |
 | Mineral (scale) | acid | 0.0075 s⁻¹ | 1 % HNO₃, 60 °C, 1.5 m/s |
 
-Each follows first-order kinetics with three multiplicative terms -- the usual
+Each follows first-order kinetics with three multiplicative terms, the usual
 time, action, concentration, temperature decomposition, written out:
 
 ```
@@ -135,7 +135,7 @@ skid:
 
 They appear in every batch record under `independent_check` and they are there
 to test the controller's release decision, never to inform it. The working
-limits -- 1 g/m² and 50 mg/L -- are stated as assumptions in
+limits (1 g/m² and 50 mg/L) are stated as assumptions in
 [limitations.md](limitations.md), not as standards.
 
 ## Instruments
