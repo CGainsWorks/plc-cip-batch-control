@@ -1,0 +1,3728 @@
+<?xml version="1.0" encoding="utf-8"?>
+<project xmlns="http://www.plcopen.org/xml/tc6_0201" xmlns:xhtml="http://www.w3.org/1999/xhtml">
+  <fileHeader companyName="CGainsWorks" productName="plc-cip-batch-control" productVersion="1.0.0" creationDateTime="1970-01-01T00:00:00" contentDescription="CIP skid controller, exported from plc/" />
+  <contentHeader name="plc-cip-batch-control">
+    <coordinateInfo>
+      <fbd>
+        <scaling x="1" y="1" />
+      </fbd>
+      <ld>
+        <scaling x="1" y="1" />
+      </ld>
+      <sfc>
+        <scaling x="1" y="1" />
+      </sfc>
+    </coordinateInfo>
+  </contentHeader>
+  <types>
+    <dataTypes>
+      <dataType name="E_UnitState">
+        <baseType>
+          <enum>
+            <values>
+              <value name="UST_IDLE" value="0" />
+              <value name="UST_STARTING" value="1" />
+              <value name="UST_RUNNING" value="2" />
+              <value name="UST_HOLDING" value="3" />
+              <value name="UST_HELD" value="4" />
+              <value name="UST_RESTARTING" value="5" />
+              <value name="UST_COMPLETING" value="6" />
+              <value name="UST_COMPLETE" value="7" />
+              <value name="UST_ABORTING" value="8" />
+              <value name="UST_ABORTED" value="9" />
+            </values>
+          </enum>
+        </baseType>
+      </dataType>
+      <dataType name="E_Phase">
+        <baseType>
+          <enum>
+            <values>
+              <value name="PH_IDLE" value="0" />
+              <value name="PH_PRE_RINSE" value="1" />
+              <value name="PH_CAUSTIC_WASH" value="2" />
+              <value name="PH_INTERMEDIATE_RINSE" value="3" />
+              <value name="PH_ACID_WASH" value="4" />
+              <value name="PH_FINAL_RINSE" value="5" />
+              <value name="PH_SANITISE" value="6" />
+              <value name="PH_COMPLETE" value="7" />
+            </values>
+          </enum>
+        </baseType>
+      </dataType>
+      <dataType name="E_PhaseStep">
+        <baseType>
+          <enum>
+            <values>
+              <value name="PS_IDLE" value="0" />
+              <value name="PS_LINEUP" value="1" />
+              <value name="PS_CHARGE" value="2" />
+              <value name="PS_CIRCULATE" value="3" />
+              <value name="PS_RECOVER" value="4" />
+              <value name="PS_DONE" value="5" />
+            </values>
+          </enum>
+        </baseType>
+      </dataType>
+      <dataType name="E_Source">
+        <baseType>
+          <enum>
+            <values>
+              <value name="SRC_NONE" value="0" />
+              <value name="SRC_FRESH" value="1" />
+              <value name="SRC_RECOVERED" value="2" />
+              <value name="SRC_CAUSTIC" value="3" />
+              <value name="SRC_ACID" value="4" />
+            </values>
+          </enum>
+        </baseType>
+      </dataType>
+      <dataType name="E_Return">
+        <baseType>
+          <enum>
+            <values>
+              <value name="RET_DRAIN" value="0" />
+              <value name="RET_RECOVERY" value="1" />
+              <value name="RET_CAUSTIC" value="2" />
+              <value name="RET_ACID" value="3" />
+              <value name="RET_BALANCE" value="4" />
+            </values>
+          </enum>
+        </baseType>
+      </dataType>
+      <dataType name="E_FailCode">
+        <baseType>
+          <enum>
+            <values>
+              <value name="FC_NONE" value="0" />
+              <value name="FC_LINEUP_TIMEOUT" value="1" />
+              <value name="FC_CHARGE_TIMEOUT" value="2" />
+              <value name="FC_TEMP_TIMEOUT" value="3" />
+              <value name="FC_PHASE_TIMEOUT" value="4" />
+              <value name="FC_FLOW_LOW" value="5" />
+              <value name="FC_PUMP_FAULT" value="6" />
+              <value name="FC_OPERATOR_ABORT" value="7" />
+              <value name="FC_SAFETY_TRIP" value="8" />
+              <value name="FC_RINSE_NOT_CLEAN" value="9" />
+              <value name="FC_LEVEL_LOW" value="10" />
+              <value name="FC_SENSOR_FAULT" value="11" />
+            </values>
+          </enum>
+        </baseType>
+      </dataType>
+      <dataType name="ST_PhaseParams">
+        <baseType>
+          <struct>
+            <variable name="eSource">
+              <type>
+                <derived name="E_Source" />
+              </type>
+            </variable>
+            <variable name="eReturn">
+              <type>
+                <derived name="E_Return" />
+              </type>
+            </variable>
+            <variable name="rTempSp">
+              <type>
+                <REAL />
+              </type>
+            </variable>
+            <variable name="rTempMin">
+              <type>
+                <REAL />
+              </type>
+            </variable>
+            <variable name="rConcSp">
+              <type>
+                <REAL />
+              </type>
+            </variable>
+            <variable name="rConcMin">
+              <type>
+                <REAL />
+              </type>
+            </variable>
+            <variable name="rConcMax">
+              <type>
+                <REAL />
+              </type>
+            </variable>
+            <variable name="rFlowSp">
+              <type>
+                <REAL />
+              </type>
+            </variable>
+            <variable name="rFlowMin">
+              <type>
+                <REAL />
+              </type>
+            </variable>
+            <variable name="tHold">
+              <type>
+                <TIME />
+              </type>
+            </variable>
+            <variable name="tMinPhase">
+              <type>
+                <TIME />
+              </type>
+            </variable>
+            <variable name="tMaxPhase">
+              <type>
+                <TIME />
+              </type>
+            </variable>
+            <variable name="tRecover">
+              <type>
+                <TIME />
+              </type>
+            </variable>
+            <variable name="xHeat">
+              <type>
+                <BOOL />
+              </type>
+            </variable>
+            <variable name="xDose">
+              <type>
+                <BOOL />
+              </type>
+            </variable>
+            <variable name="xRecirculate">
+              <type>
+                <BOOL />
+              </type>
+            </variable>
+            <variable name="xAdaptiveEnd">
+              <type>
+                <BOOL />
+              </type>
+            </variable>
+            <variable name="rEndConductivity">
+              <type>
+                <REAL />
+              </type>
+            </variable>
+          </struct>
+        </baseType>
+      </dataType>
+      <dataType name="ST_Demand">
+        <baseType>
+          <struct>
+            <variable name="eSource">
+              <type>
+                <derived name="E_Source" />
+              </type>
+            </variable>
+            <variable name="eReturn">
+              <type>
+                <derived name="E_Return" />
+              </type>
+            </variable>
+            <variable name="rFlowSp">
+              <type>
+                <REAL />
+              </type>
+            </variable>
+            <variable name="rTempSp">
+              <type>
+                <REAL />
+              </type>
+            </variable>
+            <variable name="xHeat">
+              <type>
+                <BOOL />
+              </type>
+            </variable>
+            <variable name="xDose">
+              <type>
+                <BOOL />
+              </type>
+            </variable>
+            <variable name="xSupplyPump">
+              <type>
+                <BOOL />
+              </type>
+            </variable>
+            <variable name="xReturnPump">
+              <type>
+                <BOOL />
+              </type>
+            </variable>
+            <variable name="xFillValve">
+              <type>
+                <BOOL />
+              </type>
+            </variable>
+          </struct>
+        </baseType>
+      </dataType>
+      <dataType name="ST_PhaseResult">
+        <baseType>
+          <struct>
+            <variable name="ePhase">
+              <type>
+                <derived name="E_Phase" />
+              </type>
+            </variable>
+            <variable name="xExecuted">
+              <type>
+                <BOOL />
+              </type>
+            </variable>
+            <variable name="xPass">
+              <type>
+                <BOOL />
+              </type>
+            </variable>
+            <variable name="eFail">
+              <type>
+                <derived name="E_FailCode" />
+              </type>
+            </variable>
+            <variable name="rDurationS">
+              <type>
+                <REAL />
+              </type>
+            </variable>
+            <variable name="rHoldAchievedS">
+              <type>
+                <REAL />
+              </type>
+            </variable>
+            <variable name="rHoldRequiredS">
+              <type>
+                <REAL />
+              </type>
+            </variable>
+            <variable name="xAdaptiveEnd">
+              <type>
+                <BOOL />
+              </type>
+            </variable>
+            <variable name="rMinTempC">
+              <type>
+                <REAL />
+              </type>
+              <initialValue>
+                <simpleValue value="999.0" />
+              </initialValue>
+            </variable>
+            <variable name="rMaxTempC">
+              <type>
+                <REAL />
+              </type>
+            </variable>
+            <variable name="rMeanConcPct">
+              <type>
+                <REAL />
+              </type>
+            </variable>
+            <variable name="rMinFlow">
+              <type>
+                <REAL />
+              </type>
+              <initialValue>
+                <simpleValue value="999.0" />
+              </initialValue>
+            </variable>
+            <variable name="rWaterL">
+              <type>
+                <REAL />
+              </type>
+            </variable>
+            <variable name="rChemL">
+              <type>
+                <REAL />
+              </type>
+            </variable>
+            <variable name="rEnergyKWh">
+              <type>
+                <REAL />
+              </type>
+            </variable>
+            <variable name="rEndConductivity">
+              <type>
+                <REAL />
+              </type>
+            </variable>
+          </struct>
+        </baseType>
+      </dataType>
+      <dataType name="ST_Recipe">
+        <baseType>
+          <struct>
+            <variable name="sName">
+              <type>
+                <string length="24" />
+              </type>
+              <initialValue>
+                <simpleValue value="'default'" />
+              </initialValue>
+            </variable>
+            <variable name="xUseAcid">
+              <type>
+                <BOOL />
+              </type>
+              <initialValue>
+                <simpleValue value="TRUE" />
+              </initialValue>
+            </variable>
+            <variable name="xUseSanitise">
+              <type>
+                <BOOL />
+              </type>
+              <initialValue>
+                <simpleValue value="FALSE" />
+              </initialValue>
+            </variable>
+            <variable name="xAdaptive">
+              <type>
+                <BOOL />
+              </type>
+              <initialValue>
+                <simpleValue value="FALSE" />
+              </initialValue>
+            </variable>
+            <variable name="rFlowSp">
+              <type>
+                <REAL />
+              </type>
+              <initialValue>
+                <simpleValue value="18.0" />
+              </initialValue>
+            </variable>
+            <variable name="tPreRinse">
+              <type>
+                <TIME />
+              </type>
+              <initialValue>
+                <simpleValue value="T#3m" />
+              </initialValue>
+            </variable>
+            <variable name="rCausticTempSp">
+              <type>
+                <REAL />
+              </type>
+              <initialValue>
+                <simpleValue value="75.0" />
+              </initialValue>
+            </variable>
+            <variable name="rCausticTempMin">
+              <type>
+                <REAL />
+              </type>
+              <initialValue>
+                <simpleValue value="70.0" />
+              </initialValue>
+            </variable>
+            <variable name="rCausticConcSp">
+              <type>
+                <REAL />
+              </type>
+              <initialValue>
+                <simpleValue value="2.0" />
+              </initialValue>
+            </variable>
+            <variable name="tCausticHold">
+              <type>
+                <TIME />
+              </type>
+              <initialValue>
+                <simpleValue value="T#10m" />
+              </initialValue>
+            </variable>
+            <variable name="tIntRinse">
+              <type>
+                <TIME />
+              </type>
+              <initialValue>
+                <simpleValue value="T#2m" />
+              </initialValue>
+            </variable>
+            <variable name="rAcidTempSp">
+              <type>
+                <REAL />
+              </type>
+              <initialValue>
+                <simpleValue value="60.0" />
+              </initialValue>
+            </variable>
+            <variable name="rAcidTempMin">
+              <type>
+                <REAL />
+              </type>
+              <initialValue>
+                <simpleValue value="55.0" />
+              </initialValue>
+            </variable>
+            <variable name="rAcidConcSp">
+              <type>
+                <REAL />
+              </type>
+              <initialValue>
+                <simpleValue value="1.0" />
+              </initialValue>
+            </variable>
+            <variable name="tAcidHold">
+              <type>
+                <TIME />
+              </type>
+              <initialValue>
+                <simpleValue value="T#5m" />
+              </initialValue>
+            </variable>
+            <variable name="tFinalRinse">
+              <type>
+                <TIME />
+              </type>
+              <initialValue>
+                <simpleValue value="T#3m" />
+              </initialValue>
+            </variable>
+            <variable name="rSanitiseTempSp">
+              <type>
+                <REAL />
+              </type>
+              <initialValue>
+                <simpleValue value="85.0" />
+              </initialValue>
+            </variable>
+            <variable name="rSanitiseTempMin">
+              <type>
+                <REAL />
+              </type>
+              <initialValue>
+                <simpleValue value="80.0" />
+              </initialValue>
+            </variable>
+            <variable name="tSanitiseHold">
+              <type>
+                <TIME />
+              </type>
+              <initialValue>
+                <simpleValue value="T#10m" />
+              </initialValue>
+            </variable>
+            <variable name="rRinseEndCond">
+              <type>
+                <REAL />
+              </type>
+              <initialValue>
+                <simpleValue value="0.10" />
+              </initialValue>
+            </variable>
+            <variable name="tPhaseMax">
+              <type>
+                <TIME />
+              </type>
+              <initialValue>
+                <simpleValue value="T#45m" />
+              </initialValue>
+            </variable>
+            <variable name="tRinseMax">
+              <type>
+                <TIME />
+              </type>
+              <initialValue>
+                <simpleValue value="T#12m" />
+              </initialValue>
+            </variable>
+            <variable name="tRinseMin">
+              <type>
+                <TIME />
+              </type>
+              <initialValue>
+                <simpleValue value="T#60s" />
+              </initialValue>
+            </variable>
+            <variable name="rFlowMin">
+              <type>
+                <REAL />
+              </type>
+              <initialValue>
+                <simpleValue value="14.0" />
+              </initialValue>
+            </variable>
+          </struct>
+        </baseType>
+      </dataType>
+      <dataType name="ST_Kpi">
+        <baseType>
+          <struct>
+            <variable name="rFreshWaterL">
+              <type>
+                <REAL />
+              </type>
+            </variable>
+            <variable name="rRecoveredWaterL">
+              <type>
+                <REAL />
+              </type>
+            </variable>
+            <variable name="rEffluentL">
+              <type>
+                <REAL />
+              </type>
+            </variable>
+            <variable name="rCausticL">
+              <type>
+                <REAL />
+              </type>
+            </variable>
+            <variable name="rAcidL">
+              <type>
+                <REAL />
+              </type>
+            </variable>
+            <variable name="rEnergyKWh">
+              <type>
+                <REAL />
+              </type>
+            </variable>
+            <variable name="rCycleTimeS">
+              <type>
+                <REAL />
+              </type>
+            </variable>
+            <variable name="xVerifiedClean">
+              <type>
+                <BOOL />
+              </type>
+            </variable>
+          </struct>
+        </baseType>
+      </dataType>
+      <dataType name="ST_Alarm">
+        <baseType>
+          <struct>
+            <variable name="xActive">
+              <type>
+                <BOOL />
+              </type>
+            </variable>
+            <variable name="xLatched">
+              <type>
+                <BOOL />
+              </type>
+            </variable>
+            <variable name="xAcked">
+              <type>
+                <BOOL />
+              </type>
+            </variable>
+            <variable name="iPriority">
+              <type>
+                <INT />
+              </type>
+            </variable>
+            <variable name="rTimeInS">
+              <type>
+                <REAL />
+              </type>
+            </variable>
+            <variable name="iCount">
+              <type>
+                <INT />
+              </type>
+            </variable>
+          </struct>
+        </baseType>
+      </dataType>
+    </dataTypes>
+    <pous>
+      <pou name="FB_Alarm" pouType="functionBlock">
+        <interface>
+          <inputVars>
+            <variable name="xCondition">
+              <type>
+                <BOOL />
+              </type>
+            </variable>
+            <variable name="xEnable">
+              <type>
+                <BOOL />
+              </type>
+              <initialValue>
+                <simpleValue value="TRUE" />
+              </initialValue>
+            </variable>
+            <variable name="xAck">
+              <type>
+                <BOOL />
+              </type>
+            </variable>
+            <variable name="iPriority">
+              <type>
+                <INT />
+              </type>
+              <initialValue>
+                <simpleValue value="3" />
+              </initialValue>
+            </variable>
+            <variable name="tOnDelay">
+              <type>
+                <TIME />
+              </type>
+              <initialValue>
+                <simpleValue value="T#0s" />
+              </initialValue>
+            </variable>
+            <variable name="tOffDelay">
+              <type>
+                <TIME />
+              </type>
+              <initialValue>
+                <simpleValue value="T#0s" />
+              </initialValue>
+            </variable>
+            <variable name="rNowS">
+              <type>
+                <REAL />
+              </type>
+            </variable>
+          </inputVars>
+          <inOutVars>
+            <variable name="stAlarm">
+              <type>
+                <derived name="ST_Alarm" />
+              </type>
+            </variable>
+          </inOutVars>
+          <outputVars>
+            <variable name="xNewAlarm">
+              <type>
+                <BOOL />
+              </type>
+            </variable>
+          </outputVars>
+          <localVars>
+            <variable name="fbOn">
+              <type>
+                <derived name="TON" />
+              </type>
+            </variable>
+            <variable name="fbOff">
+              <type>
+                <derived name="TOF" />
+              </type>
+            </variable>
+            <variable name="fbRise">
+              <type>
+                <derived name="R_TRIG" />
+              </type>
+            </variable>
+          </localVars>
+        </interface>
+        <body>
+          <ST>
+            <xhtml:p>stAlarm.iPriority := iPriority;
+
+fbOn(IN := xCondition AND xEnable, PT := tOnDelay);
+fbOff(IN := fbOn.Q, PT := tOffDelay);
+stAlarm.xActive := fbOff.Q;
+
+fbRise(CLK := stAlarm.xActive);
+xNewAlarm := fbRise.Q;
+
+IF xNewAlarm THEN
+    stAlarm.xLatched := TRUE;
+    stAlarm.xAcked := FALSE;
+    stAlarm.rTimeInS := rNowS;
+    stAlarm.iCount := stAlarm.iCount + 1;
+END_IF
+
+IF xAck AND stAlarm.xLatched THEN
+    stAlarm.xAcked := TRUE;
+END_IF
+
+IF stAlarm.xLatched AND NOT stAlarm.xActive AND stAlarm.xAcked THEN
+    stAlarm.xLatched := FALSE;
+END_IF</xhtml:p>
+          </ST>
+        </body>
+      </pou>
+      <pou name="FB_CipPhase" pouType="functionBlock">
+        <interface>
+          <inputVars>
+            <variable name="xExecute">
+              <type>
+                <BOOL />
+              </type>
+            </variable>
+            <variable name="xHolding">
+              <type>
+                <BOOL />
+              </type>
+            </variable>
+            <variable name="ePhase">
+              <type>
+                <derived name="E_Phase" />
+              </type>
+            </variable>
+            <variable name="stParams">
+              <type>
+                <derived name="ST_PhaseParams" />
+              </type>
+            </variable>
+            <variable name="rTempC">
+              <type>
+                <REAL />
+              </type>
+            </variable>
+            <variable name="rFlowM3h">
+              <type>
+                <REAL />
+              </type>
+            </variable>
+            <variable name="rConcPct">
+              <type>
+                <REAL />
+              </type>
+            </variable>
+            <variable name="rDeltaCond">
+              <type>
+                <REAL />
+              </type>
+            </variable>
+            <variable name="rLevelPct">
+              <type>
+                <REAL />
+              </type>
+            </variable>
+            <variable name="xPumpHealthy">
+              <type>
+                <BOOL />
+              </type>
+              <initialValue>
+                <simpleValue value="TRUE" />
+              </initialValue>
+            </variable>
+            <variable name="rCycleS">
+              <type>
+                <REAL />
+              </type>
+              <initialValue>
+                <simpleValue value="0.1" />
+              </initialValue>
+            </variable>
+          </inputVars>
+          <outputVars>
+            <variable name="eStep">
+              <type>
+                <derived name="E_PhaseStep" />
+              </type>
+            </variable>
+            <variable name="stDemand">
+              <type>
+                <derived name="ST_Demand" />
+              </type>
+            </variable>
+            <variable name="xDone">
+              <type>
+                <BOOL />
+              </type>
+            </variable>
+            <variable name="xFailed">
+              <type>
+                <BOOL />
+              </type>
+            </variable>
+            <variable name="eFail">
+              <type>
+                <derived name="E_FailCode" />
+              </type>
+            </variable>
+            <variable name="rElapsedS">
+              <type>
+                <REAL />
+              </type>
+            </variable>
+            <variable name="rHoldAchievedS">
+              <type>
+                <REAL />
+              </type>
+            </variable>
+            <variable name="stResult">
+              <type>
+                <derived name="ST_PhaseResult" />
+              </type>
+            </variable>
+            <variable name="xInSpec">
+              <type>
+                <BOOL />
+              </type>
+            </variable>
+          </outputVars>
+          <localVars>
+            <variable name="fbStart">
+              <type>
+                <derived name="R_TRIG" />
+              </type>
+            </variable>
+            <variable name="fbEndStable">
+              <type>
+                <derived name="TON" />
+              </type>
+            </variable>
+            <variable name="fbFlowLow">
+              <type>
+                <derived name="TON" />
+              </type>
+            </variable>
+            <variable name="fbTempSlow">
+              <type>
+                <derived name="TON" />
+              </type>
+            </variable>
+            <variable name="rStepElapsedS">
+              <type>
+                <REAL />
+              </type>
+            </variable>
+            <variable name="rConcSum">
+              <type>
+                <REAL />
+              </type>
+            </variable>
+            <variable name="rConcSamples">
+              <type>
+                <REAL />
+              </type>
+            </variable>
+            <variable name="rHoldRequiredS">
+              <type>
+                <REAL />
+              </type>
+            </variable>
+            <variable name="rMinPhaseS">
+              <type>
+                <REAL />
+              </type>
+            </variable>
+            <variable name="rMaxPhaseS">
+              <type>
+                <REAL />
+              </type>
+            </variable>
+            <variable name="rRecoverS">
+              <type>
+                <REAL />
+              </type>
+            </variable>
+            <variable name="rFillTargetPct">
+              <type>
+                <REAL />
+              </type>
+            </variable>
+            <variable name="xSinglePass">
+              <type>
+                <BOOL />
+              </type>
+            </variable>
+            <variable name="eActiveReturn">
+              <type>
+                <derived name="E_Return" />
+              </type>
+            </variable>
+            <variable name="xCharged">
+              <type>
+                <BOOL />
+              </type>
+            </variable>
+            <variable name="xTempOk">
+              <type>
+                <BOOL />
+              </type>
+            </variable>
+            <variable name="xFlowOk">
+              <type>
+                <BOOL />
+              </type>
+            </variable>
+            <variable name="xConcOk">
+              <type>
+                <BOOL />
+              </type>
+            </variable>
+            <variable name="xDoseDemand">
+              <type>
+                <BOOL />
+              </type>
+            </variable>
+          </localVars>
+        </interface>
+        <body>
+          <ST>
+            <xhtml:p>fbStart(CLK := xExecute);
+
+(* ---- initialise on the rising edge of the execute request ------------- *)
+IF fbStart.Q THEN
+    eStep := PS_LINEUP;
+    rElapsedS := 0.0;
+    rStepElapsedS := 0.0;
+    rHoldAchievedS := 0.0;
+    rConcSum := 0.0;
+    rConcSamples := 0.0;
+    xCharged := FALSE;
+    xDone := FALSE;
+    xFailed := FALSE;
+    eFail := FC_NONE;
+    stResult.ePhase := ePhase;
+    stResult.xExecuted := TRUE;
+    stResult.xPass := FALSE;
+    stResult.eFail := FC_NONE;
+    stResult.rDurationS := 0.0;
+    stResult.rHoldAchievedS := 0.0;
+    stResult.rMinTempC := 999.0;
+    stResult.rMaxTempC := -999.0;
+    stResult.rMinFlow := 999.0;
+    stResult.rMeanConcPct := 0.0;
+    stResult.rEndConductivity := 0.0;
+    stResult.xAdaptiveEnd := FALSE;
+    stResult.rWaterL := 0.0;
+    stResult.rChemL := 0.0;
+    stResult.rEnergyKWh := 0.0;
+END_IF
+
+rHoldRequiredS := TimeToSeconds(stParams.tHold);
+rMinPhaseS     := TimeToSeconds(stParams.tMinPhase);
+rMaxPhaseS     := TimeToSeconds(stParams.tMaxPhase);
+rRecoverS      := TimeToSeconds(stParams.tRecover);
+
+(* An adaptive phase is judged on the conductivity endpoint, so the hold
+   requirement does not apply and the record should not imply that it does. *)
+stResult.xAdaptiveEnd := stParams.xAdaptiveEnd;
+IF stParams.xAdaptiveEnd THEN
+    stResult.rHoldRequiredS := 0.0;
+ELSE
+    stResult.rHoldRequiredS := rHoldRequiredS;
+END_IF
+
+(* A recirculating phase makes its charge up in a closed loop through the
+   balance tank and only sends the liquid to eReturn when it recovers at the
+   end. A single-pass phase runs from the source straight to eReturn, on a
+   small working volume so the tank washes out in about a minute. *)
+xSinglePass := NOT stParams.xRecirculate;
+IF xSinglePass THEN
+    rFillTargetPct := C_RINSE_LEVEL_PCT;
+ELSE
+    rFillTargetPct := C_FILL_TARGET_PCT;
+END_IF
+
+IF stParams.xRecirculate AND (eStep &lt;&gt; PS_RECOVER) THEN
+    eActiveReturn := RET_BALANCE;
+ELSE
+    eActiveReturn := stParams.eReturn;
+END_IF
+
+(* ---- idle: hold everything closed ------------------------------------ *)
+IF NOT xExecute THEN
+    stDemand.eSource := SRC_NONE;
+    stDemand.eReturn := RET_DRAIN;
+    stDemand.rFlowSp := 0.0;
+    stDemand.rTempSp := 0.0;
+    stDemand.xHeat := FALSE;
+    stDemand.xDose := FALSE;
+    stDemand.xSupplyPump := FALSE;
+    stDemand.xReturnPump := FALSE;
+    stDemand.xFillValve := FALSE;
+    xInSpec := FALSE;
+    RETURN;
+END_IF
+
+(* ---- criteria evaluated once, used by several steps ------------------- *)
+xTempOk := (NOT stParams.xHeat) OR (rTempC &gt;= stParams.rTempMin);
+xFlowOk := rFlowM3h &gt;= stParams.rFlowMin;
+xConcOk := (NOT stParams.xDose) OR
+           ((rConcPct &gt;= stParams.rConcMin) AND (rConcPct &lt;= stParams.rConcMax));
+xInSpec := xTempOk AND xFlowOk AND xConcOk;
+
+(* Dose whenever the strength has drifted below setpoint. Above the band the
+   valve simply stays shut; the phase dilutes back with the next charge. *)
+xDoseDemand := stParams.xDose AND (rConcPct &lt; stParams.rConcSp);
+
+(* ---- the line-up is common to every running step ---------------------- *)
+stDemand.eSource := stParams.eSource;
+stDemand.eReturn := eActiveReturn;
+stDemand.rTempSp := stParams.rTempSp;
+stDemand.rFlowSp := stParams.rFlowSp;
+
+IF xHolding THEN
+    (* Freeze: keep the valve matrix so the circuit stays full but stop
+       circulating, stop heating and stop dosing. Accumulators do not advance,
+       so a held phase does not earn hold time. *)
+    stDemand.xSupplyPump := FALSE;
+    stDemand.xReturnPump := TRUE;
+    stDemand.xHeat := FALSE;
+    stDemand.xDose := FALSE;
+    stDemand.xFillValve := FALSE;
+    RETURN;
+END_IF
+
+rElapsedS := rElapsedS + rCycleS;
+rStepElapsedS := rStepElapsedS + rCycleS;
+stResult.rDurationS := rElapsedS;
+
+(* ---- the step machine ------------------------------------------------- *)
+CASE eStep OF
+
+    PS_LINEUP:
+        stDemand.xSupplyPump := FALSE;
+        stDemand.xReturnPump := TRUE;
+        stDemand.xHeat := FALSE;
+        stDemand.xDose := FALSE;
+        stDemand.xFillValve := TRUE;
+        IF rStepElapsedS &gt;= 5.0 THEN
+            eStep := PS_CHARGE;
+            rStepElapsedS := 0.0;
+        ELSIF rStepElapsedS &gt; 60.0 THEN
+            eFail := FC_LINEUP_TIMEOUT;
+        END_IF
+
+    PS_CHARGE:
+        stDemand.xReturnPump := TRUE;
+        stDemand.xFillValve := rLevelPct &lt; rFillTargetPct;
+        (* Start circulating as soon as there is enough suction head; the
+           remaining fill and the dose trim happen while the pump runs, which
+           is also what satisfies the no-dosing-without-flow interlock. *)
+        stDemand.xSupplyPump := rLevelPct &gt;= C_PUMP_START_PCT;
+        stDemand.xHeat := stParams.xHeat AND stDemand.xSupplyPump;
+        stDemand.xDose := xDoseDemand AND stDemand.xSupplyPump;
+        xCharged := (rLevelPct &gt;= rFillTargetPct) AND xConcOk;
+        IF xCharged THEN
+            eStep := PS_CIRCULATE;
+            rStepElapsedS := 0.0;
+        ELSIF rStepElapsedS &gt; 600.0 THEN
+            eFail := FC_CHARGE_TIMEOUT;
+        END_IF
+
+    PS_CIRCULATE:
+        stDemand.xSupplyPump := TRUE;
+        stDemand.xReturnPump := TRUE;
+        stDemand.xHeat := stParams.xHeat;
+        stDemand.xDose := xDoseDemand;
+        (* Single-pass phases keep drawing fresh liquid; recirculating phases
+           only top up if the circuit has swallowed some of the charge. *)
+        stDemand.xFillValve := rLevelPct &lt; rFillTargetPct;
+
+        IF xInSpec THEN
+            rHoldAchievedS := rHoldAchievedS + rCycleS;
+        END_IF
+        stResult.rHoldAchievedS := rHoldAchievedS;
+
+        (* Statistics start once the loop has settled, otherwise every phase
+           records the pump ramp as its minimum flow. *)
+        IF rStepElapsedS &gt; 15.0 THEN
+            IF rTempC &lt; stResult.rMinTempC THEN
+                stResult.rMinTempC := rTempC;
+            END_IF
+            IF rTempC &gt; stResult.rMaxTempC THEN
+                stResult.rMaxTempC := rTempC;
+            END_IF
+            IF rFlowM3h &lt; stResult.rMinFlow THEN
+                stResult.rMinFlow := rFlowM3h;
+            END_IF
+            rConcSum := rConcSum + rConcPct;
+            rConcSamples := rConcSamples + 1.0;
+            stResult.rMeanConcPct := rConcSum / rConcSamples;
+        END_IF
+        stResult.rEndConductivity := rDeltaCond;
+
+        (* Endpoint. An adaptive rinse stops when the return water is as clean
+           as the water going in; everything else stops on verified hold time. *)
+        fbEndStable(IN := stParams.xAdaptiveEnd AND (rDeltaCond &lt;= stParams.rEndConductivity)
+                          AND (rElapsedS &gt;= rMinPhaseS),
+                    PT := T#10s);
+
+        IF stParams.xAdaptiveEnd THEN
+            IF fbEndStable.Q THEN
+                eStep := PS_RECOVER;
+                rStepElapsedS := 0.0;
+            ELSIF rElapsedS &gt;= rMaxPhaseS THEN
+                eFail := FC_RINSE_NOT_CLEAN;
+            END_IF
+        ELSE
+            IF rHoldAchievedS &gt;= rHoldRequiredS THEN
+                eStep := PS_RECOVER;
+                rStepElapsedS := 0.0;
+            ELSIF rElapsedS &gt;= rMaxPhaseS THEN
+                eFail := FC_PHASE_TIMEOUT;
+            END_IF
+        END_IF
+
+        (* Sustained excursions are faults, not just missing hold time. *)
+        fbFlowLow(IN := NOT xFlowOk, PT := T#60s);
+        IF fbFlowLow.Q THEN
+            eFail := FC_FLOW_LOW;
+        END_IF
+        fbTempSlow(IN := stParams.xHeat AND NOT xTempOk, PT := T#8m);
+        IF fbTempSlow.Q THEN
+            eFail := FC_TEMP_TIMEOUT;
+        END_IF
+        IF rLevelPct &lt; C_LEVEL_TRIP_PCT THEN
+            eFail := FC_LEVEL_LOW;
+        END_IF
+
+    PS_RECOVER:
+        (* Push the contents back where they came from. Heat and dose are off
+           and the fill valve is shut, so the balance tank drains as the pump
+           empties it into the return line. Draining it properly is what keeps
+           the next phase's charge from being diluted by the last one's
+           chemical and what keeps the following rinse short. *)
+        stDemand.xSupplyPump := (rStepElapsedS &lt; rRecoverS)
+                                AND (rLevelPct &gt; C_PUMP_START_PCT);
+        stDemand.xReturnPump := TRUE;
+        stDemand.xHeat := FALSE;
+        stDemand.xDose := FALSE;
+        stDemand.xFillValve := FALSE;
+        IF (rStepElapsedS &gt;= rRecoverS) OR (rLevelPct &lt;= C_PUMP_START_PCT) THEN
+            eStep := PS_DONE;
+            rStepElapsedS := 0.0;
+        END_IF
+
+    PS_DONE:
+        stDemand.xSupplyPump := FALSE;
+        stDemand.xReturnPump := FALSE;
+        stDemand.xHeat := FALSE;
+        stDemand.xDose := FALSE;
+        stDemand.xFillValve := FALSE;
+        stDemand.eSource := SRC_NONE;
+        xDone := TRUE;
+        stResult.xPass := TRUE;
+END_CASE
+
+IF NOT xPumpHealthy THEN
+    eFail := FC_PUMP_FAULT;
+END_IF
+
+IF eFail &lt;&gt; FC_NONE THEN
+    xFailed := TRUE;
+    xDone := FALSE;
+    eStep := PS_DONE;
+    stResult.xPass := FALSE;
+    stResult.eFail := eFail;
+    stDemand.xSupplyPump := FALSE;
+    stDemand.xReturnPump := FALSE;
+    stDemand.xHeat := FALSE;
+    stDemand.xDose := FALSE;
+    stDemand.xFillValve := FALSE;
+END_IF</xhtml:p>
+          </ST>
+        </body>
+      </pou>
+      <pou name="FB_Pid" pouType="functionBlock">
+        <interface>
+          <inputVars>
+            <variable name="xEnable">
+              <type>
+                <BOOL />
+              </type>
+            </variable>
+            <variable name="rPv">
+              <type>
+                <REAL />
+              </type>
+            </variable>
+            <variable name="rSp">
+              <type>
+                <REAL />
+              </type>
+            </variable>
+            <variable name="rKp">
+              <type>
+                <REAL />
+              </type>
+              <initialValue>
+                <simpleValue value="1.0" />
+              </initialValue>
+            </variable>
+            <variable name="rTi">
+              <type>
+                <REAL />
+              </type>
+              <initialValue>
+                <simpleValue value="0.0" />
+              </initialValue>
+            </variable>
+            <variable name="rTd">
+              <type>
+                <REAL />
+              </type>
+              <initialValue>
+                <simpleValue value="0.0" />
+              </initialValue>
+            </variable>
+            <variable name="rOutMin">
+              <type>
+                <REAL />
+              </type>
+              <initialValue>
+                <simpleValue value="0.0" />
+              </initialValue>
+            </variable>
+            <variable name="rOutMax">
+              <type>
+                <REAL />
+              </type>
+              <initialValue>
+                <simpleValue value="100.0" />
+              </initialValue>
+            </variable>
+            <variable name="rCycleS">
+              <type>
+                <REAL />
+              </type>
+              <initialValue>
+                <simpleValue value="0.1" />
+              </initialValue>
+            </variable>
+          </inputVars>
+          <outputVars>
+            <variable name="rOut">
+              <type>
+                <REAL />
+              </type>
+            </variable>
+            <variable name="rError">
+              <type>
+                <REAL />
+              </type>
+            </variable>
+            <variable name="xSaturated">
+              <type>
+                <BOOL />
+              </type>
+            </variable>
+          </outputVars>
+          <localVars>
+            <variable name="rIntegral">
+              <type>
+                <REAL />
+              </type>
+            </variable>
+            <variable name="rPrevPv">
+              <type>
+                <REAL />
+              </type>
+            </variable>
+            <variable name="xFirstScan">
+              <type>
+                <BOOL />
+              </type>
+              <initialValue>
+                <simpleValue value="TRUE" />
+              </initialValue>
+            </variable>
+            <variable name="rDerivative">
+              <type>
+                <REAL />
+              </type>
+            </variable>
+            <variable name="rRaw">
+              <type>
+                <REAL />
+              </type>
+            </variable>
+          </localVars>
+        </interface>
+        <body>
+          <ST>
+            <xhtml:p>IF NOT xEnable THEN
+    (* Bumpless enough for this duty: park the integrator and the output. *)
+    rIntegral := 0.0;
+    rOut := rOutMin;
+    rError := 0.0;
+    xSaturated := FALSE;
+    xFirstScan := TRUE;
+    rPrevPv := rPv;
+    RETURN;
+END_IF
+
+rError := rSp - rPv;
+
+(* Derivative on the measurement, so a setpoint step does not kick the valve. *)
+IF xFirstScan THEN
+    rDerivative := 0.0;
+    xFirstScan := FALSE;
+ELSIF rCycleS &gt; 0.0 THEN
+    rDerivative := (rPrevPv - rPv) / rCycleS;
+ELSE
+    rDerivative := 0.0;
+END_IF
+rPrevPv := rPv;
+
+rRaw := rKp * rError + rIntegral + rKp * rTd * rDerivative;
+
+(* Clamping anti-windup: integrate only if that does not push further into a
+   limit the output is already sitting on. *)
+IF rTi &gt; 0.0 THEN
+    IF (rRaw &lt; rOutMax) AND (rRaw &gt; rOutMin) THEN
+        rIntegral := rIntegral + (rKp / rTi) * rError * rCycleS;
+    ELSIF (rRaw &gt;= rOutMax) AND (rError &lt; 0.0) THEN
+        rIntegral := rIntegral + (rKp / rTi) * rError * rCycleS;
+    ELSIF (rRaw &lt;= rOutMin) AND (rError &gt; 0.0) THEN
+        rIntegral := rIntegral + (rKp / rTi) * rError * rCycleS;
+    END_IF
+    rIntegral := LIMIT(rOutMin - rOutMax, rIntegral, rOutMax - rOutMin);
+END_IF
+
+rRaw := rKp * rError + rIntegral + rKp * rTd * rDerivative;
+rOut := LIMIT(rOutMin, rRaw, rOutMax);
+xSaturated := (rRaw &gt; rOutMax) OR (rRaw &lt; rOutMin);</xhtml:p>
+          </ST>
+        </body>
+      </pou>
+      <pou name="FB_Pump" pouType="functionBlock">
+        <interface>
+          <inputVars>
+            <variable name="xStart">
+              <type>
+                <BOOL />
+              </type>
+            </variable>
+            <variable name="xInterlockOk">
+              <type>
+                <BOOL />
+              </type>
+            </variable>
+            <variable name="xRunFeedback">
+              <type>
+                <BOOL />
+              </type>
+            </variable>
+            <variable name="xFault">
+              <type>
+                <BOOL />
+              </type>
+            </variable>
+            <variable name="xReset">
+              <type>
+                <BOOL />
+              </type>
+            </variable>
+            <variable name="tFeedbackTimeout">
+              <type>
+                <TIME />
+              </type>
+              <initialValue>
+                <simpleValue value="T#5s" />
+              </initialValue>
+            </variable>
+          </inputVars>
+          <outputVars>
+            <variable name="xRun">
+              <type>
+                <BOOL />
+              </type>
+            </variable>
+            <variable name="xTripped">
+              <type>
+                <BOOL />
+              </type>
+            </variable>
+            <variable name="xFeedbackFault">
+              <type>
+                <BOOL />
+              </type>
+            </variable>
+            <variable name="xHealthy">
+              <type>
+                <BOOL />
+              </type>
+            </variable>
+          </outputVars>
+          <localVars>
+            <variable name="fbFeedback">
+              <type>
+                <derived name="TON" />
+              </type>
+            </variable>
+            <variable name="fbFault">
+              <type>
+                <derived name="R_TRIG" />
+              </type>
+            </variable>
+          </localVars>
+        </interface>
+        <body>
+          <ST>
+            <xhtml:p>fbFault(CLK := xFault);
+
+IF fbFault.Q THEN
+    xTripped := TRUE;
+END_IF
+
+IF xReset AND NOT xFault THEN
+    xTripped := FALSE;
+    xFeedbackFault := FALSE;
+END_IF
+
+xRun := xStart AND xInterlockOk AND NOT xTripped AND NOT xFeedbackFault;
+
+(* Supervise only the commanded direction: a pump that keeps running after the
+   command drops is a separate condition, alarmed in PRG_Alarms. *)
+fbFeedback(IN := xRun AND NOT xRunFeedback, PT := tFeedbackTimeout);
+IF fbFeedback.Q THEN
+    xFeedbackFault := TRUE;
+    xRun := FALSE;
+END_IF
+
+xHealthy := NOT xTripped AND NOT xFeedbackFault AND NOT xFault;</xhtml:p>
+          </ST>
+        </body>
+      </pou>
+      <pou name="FB_Totaliser" pouType="functionBlock">
+        <interface>
+          <inputVars>
+            <variable name="xEnable">
+              <type>
+                <BOOL />
+              </type>
+            </variable>
+            <variable name="rRatePerHour">
+              <type>
+                <REAL />
+              </type>
+            </variable>
+            <variable name="rCutOff">
+              <type>
+                <REAL />
+              </type>
+              <initialValue>
+                <simpleValue value="0.0" />
+              </initialValue>
+            </variable>
+            <variable name="rCycleS">
+              <type>
+                <REAL />
+              </type>
+              <initialValue>
+                <simpleValue value="0.1" />
+              </initialValue>
+            </variable>
+            <variable name="xReset">
+              <type>
+                <BOOL />
+              </type>
+            </variable>
+          </inputVars>
+          <outputVars>
+            <variable name="rTotal">
+              <type>
+                <REAL />
+              </type>
+            </variable>
+            <variable name="rRateUsed">
+              <type>
+                <REAL />
+              </type>
+            </variable>
+          </outputVars>
+        </interface>
+        <body>
+          <ST>
+            <xhtml:p>IF xReset THEN
+    rTotal := 0.0;
+END_IF
+
+IF xEnable AND (rRatePerHour &gt; rCutOff) THEN
+    rRateUsed := rRatePerHour;
+    rTotal := rTotal + rRatePerHour * rCycleS / 3600.0;
+ELSE
+    rRateUsed := 0.0;
+END_IF</xhtml:p>
+          </ST>
+        </body>
+      </pou>
+      <pou name="FB_UnitStateMachine" pouType="functionBlock">
+        <interface>
+          <inputVars>
+            <variable name="xStart">
+              <type>
+                <BOOL />
+              </type>
+            </variable>
+            <variable name="xHold">
+              <type>
+                <BOOL />
+              </type>
+            </variable>
+            <variable name="xRestart">
+              <type>
+                <BOOL />
+              </type>
+            </variable>
+            <variable name="xAbort">
+              <type>
+                <BOOL />
+              </type>
+            </variable>
+            <variable name="xReset">
+              <type>
+                <BOOL />
+              </type>
+            </variable>
+            <variable name="xReadyToStart">
+              <type>
+                <BOOL />
+              </type>
+            </variable>
+            <variable name="xProcedureComplete">
+              <type>
+                <BOOL />
+              </type>
+            </variable>
+            <variable name="xProcedureFailed">
+              <type>
+                <BOOL />
+              </type>
+            </variable>
+            <variable name="xSafetyTrip">
+              <type>
+                <BOOL />
+              </type>
+            </variable>
+            <variable name="tAbortSettle">
+              <type>
+                <TIME />
+              </type>
+              <initialValue>
+                <simpleValue value="T#5s" />
+              </initialValue>
+            </variable>
+            <variable name="tHoldSettle">
+              <type>
+                <TIME />
+              </type>
+              <initialValue>
+                <simpleValue value="T#2s" />
+              </initialValue>
+            </variable>
+          </inputVars>
+          <outputVars>
+            <variable name="eState">
+              <type>
+                <derived name="E_UnitState" />
+              </type>
+            </variable>
+            <variable name="xExecute">
+              <type>
+                <BOOL />
+              </type>
+            </variable>
+            <variable name="xHolding">
+              <type>
+                <BOOL />
+              </type>
+            </variable>
+            <variable name="xAborting">
+              <type>
+                <BOOL />
+              </type>
+            </variable>
+            <variable name="xStartPulse">
+              <type>
+                <BOOL />
+              </type>
+            </variable>
+            <variable name="xActive">
+              <type>
+                <BOOL />
+              </type>
+            </variable>
+          </outputVars>
+          <localVars>
+            <variable name="fbStart">
+              <type>
+                <derived name="R_TRIG" />
+              </type>
+            </variable>
+            <variable name="fbHold">
+              <type>
+                <derived name="R_TRIG" />
+              </type>
+            </variable>
+            <variable name="fbRestart">
+              <type>
+                <derived name="R_TRIG" />
+              </type>
+            </variable>
+            <variable name="fbAbort">
+              <type>
+                <derived name="R_TRIG" />
+              </type>
+            </variable>
+            <variable name="fbReset">
+              <type>
+                <derived name="R_TRIG" />
+              </type>
+            </variable>
+            <variable name="fbAbortTmr">
+              <type>
+                <derived name="TON" />
+              </type>
+            </variable>
+            <variable name="fbHoldTmr">
+              <type>
+                <derived name="TON" />
+              </type>
+            </variable>
+          </localVars>
+        </interface>
+        <body>
+          <ST>
+            <xhtml:p>fbStart(CLK := xStart);
+fbHold(CLK := xHold);
+fbRestart(CLK := xRestart);
+fbAbort(CLK := xAbort);
+fbReset(CLK := xReset);
+
+xStartPulse := FALSE;
+
+(* An abort request or a safety trip pre-empts every other transition. *)
+IF (fbAbort.Q OR xSafetyTrip OR xProcedureFailed)
+   AND (eState &lt;&gt; UST_IDLE) AND (eState &lt;&gt; UST_COMPLETE)
+   AND (eState &lt;&gt; UST_ABORTED) AND (eState &lt;&gt; UST_ABORTING) THEN
+    eState := UST_ABORTING;
+END_IF
+
+CASE eState OF
+    UST_IDLE:
+        (* Park both settle timers so a previous batch cannot leave one
+           already elapsed and collapse the next HOLDING into one scan. *)
+        fbHoldTmr(IN := FALSE, PT := tHoldSettle);
+        fbAbortTmr(IN := FALSE, PT := tAbortSettle);
+        IF fbStart.Q AND xReadyToStart THEN
+            eState := UST_STARTING;
+        END_IF
+
+    UST_STARTING:
+        xStartPulse := TRUE;
+        eState := UST_RUNNING;
+
+    UST_RUNNING:
+        IF xProcedureComplete THEN
+            eState := UST_COMPLETING;
+        ELSIF fbHold.Q THEN
+            eState := UST_HOLDING;
+        END_IF
+
+    UST_HOLDING:
+        fbHoldTmr(IN := TRUE, PT := tHoldSettle);
+        IF fbHoldTmr.Q THEN
+            fbHoldTmr(IN := FALSE, PT := tHoldSettle);
+            eState := UST_HELD;
+        END_IF
+
+    UST_HELD:
+        IF fbRestart.Q THEN
+            eState := UST_RESTARTING;
+        END_IF
+
+    UST_RESTARTING:
+        eState := UST_RUNNING;
+
+    UST_COMPLETING:
+        eState := UST_COMPLETE;
+
+    UST_COMPLETE:
+        IF fbReset.Q THEN
+            eState := UST_IDLE;
+        END_IF
+
+    UST_ABORTING:
+        fbAbortTmr(IN := TRUE, PT := tAbortSettle);
+        IF fbAbortTmr.Q THEN
+            fbAbortTmr(IN := FALSE, PT := tAbortSettle);
+            eState := UST_ABORTED;
+        END_IF
+
+    UST_ABORTED:
+        IF fbReset.Q AND NOT xSafetyTrip THEN
+            eState := UST_IDLE;
+        END_IF
+END_CASE
+
+xExecute  := (eState = UST_RUNNING);
+(* RESTARTING counts as holding. It lasts one scan, and the phase has not
+   resumed yet, so the phase engine must keep its state through it. Leaving it
+   out of both outputs gives the engine one scan in which it is neither
+   executing nor holding, which it reads as the phase having ended; the next
+   scan then looks like a fresh start and the phase begins again from zero. *)
+xHolding  := (eState = UST_HOLDING) OR (eState = UST_HELD) OR (eState = UST_RESTARTING);
+xAborting := (eState = UST_ABORTING);
+xActive   := (eState &lt;&gt; UST_IDLE) AND (eState &lt;&gt; UST_COMPLETE) AND (eState &lt;&gt; UST_ABORTED);</xhtml:p>
+          </ST>
+        </body>
+      </pou>
+      <pou name="TimeToSeconds" pouType="function">
+        <interface>
+          <returnType>
+            <REAL />
+          </returnType>
+          <inputVars>
+            <variable name="tIn">
+              <type>
+                <TIME />
+              </type>
+            </variable>
+          </inputVars>
+        </interface>
+        <body>
+          <ST>
+            <xhtml:p>TimeToSeconds := LREAL_TO_REAL(TIME_TO_LREAL(tIn) / TIME_TO_LREAL(T#1s));</xhtml:p>
+          </ST>
+        </body>
+      </pou>
+      <pou name="SecondsToTime" pouType="function">
+        <interface>
+          <returnType>
+            <TIME />
+          </returnType>
+          <inputVars>
+            <variable name="rSeconds">
+              <type>
+                <REAL />
+              </type>
+            </variable>
+          </inputVars>
+        </interface>
+        <body>
+          <ST>
+            <xhtml:p>SecondsToTime := LREAL_TO_TIME(REAL_TO_LREAL(rSeconds) * TIME_TO_LREAL(T#1s));</xhtml:p>
+          </ST>
+        </body>
+      </pou>
+      <pou name="PRG_Alarms" pouType="program">
+        <interface>
+          <localVars>
+            <variable name="fbSafety">
+              <type>
+                <derived name="FB_Alarm" />
+              </type>
+            </variable>
+            <variable name="fbSupplyPump">
+              <type>
+                <derived name="FB_Alarm" />
+              </type>
+            </variable>
+            <variable name="fbReturnPump">
+              <type>
+                <derived name="FB_Alarm" />
+              </type>
+            </variable>
+            <variable name="fbLevelLow">
+              <type>
+                <derived name="FB_Alarm" />
+              </type>
+            </variable>
+            <variable name="fbCausticLow">
+              <type>
+                <derived name="FB_Alarm" />
+              </type>
+            </variable>
+            <variable name="fbAcidLow">
+              <type>
+                <derived name="FB_Alarm" />
+              </type>
+            </variable>
+            <variable name="fbTempLow">
+              <type>
+                <derived name="FB_Alarm" />
+              </type>
+            </variable>
+            <variable name="fbFlowLow">
+              <type>
+                <derived name="FB_Alarm" />
+              </type>
+            </variable>
+            <variable name="fbCircuitBusy">
+              <type>
+                <derived name="FB_Alarm" />
+              </type>
+            </variable>
+            <variable name="fbPhaseTimeout">
+              <type>
+                <derived name="FB_Alarm" />
+              </type>
+            </variable>
+            <variable name="fbNotClean">
+              <type>
+                <derived name="FB_Alarm" />
+              </type>
+            </variable>
+            <variable name="fbNoSteam">
+              <type>
+                <derived name="FB_Alarm" />
+              </type>
+            </variable>
+            <variable name="fbCondSensor">
+              <type>
+                <derived name="FB_Alarm" />
+              </type>
+            </variable>
+            <variable name="i">
+              <type>
+                <INT />
+              </type>
+            </variable>
+            <variable name="xAnyLatched">
+              <type>
+                <BOOL />
+              </type>
+            </variable>
+            <variable name="xCirculating">
+              <type>
+                <BOOL />
+              </type>
+            </variable>
+          </localVars>
+        </interface>
+        <body>
+          <ST>
+            <xhtml:p>xCirculating := gxPhaseExecute AND (gPhaseStep = PS_CIRCULATE);
+
+fbSafety(xCondition := gxSafetyTrip,
+         iPriority  := 1,
+         xAck       := xCmdAckAlarms,
+         rNowS      := grPlcTimeS,
+         stAlarm    := gAlarms[C_ALM_SAFETY]);
+
+fbSupplyPump(xCondition := xSupplyPumpFault OR (xSupplyPumpRun AND NOT xSupplyPumpRunning),
+             iPriority  := 1,
+             tOnDelay   := T#5s,
+             xAck       := xCmdAckAlarms,
+             rNowS      := grPlcTimeS,
+             stAlarm    := gAlarms[C_ALM_SUPPLY_PUMP]);
+
+fbReturnPump(xCondition := xReturnPumpFault OR (xReturnPumpRun AND NOT xReturnPumpRunning),
+             iPriority  := 2,
+             tOnDelay   := T#5s,
+             xAck       := xCmdAckAlarms,
+             rNowS      := grPlcTimeS,
+             stAlarm    := gAlarms[C_ALM_RETURN_PUMP]);
+
+fbLevelLow(xCondition := (rLevelBalanceTankPct &lt; C_LEVEL_TRIP_PCT) AND (gUnitState &lt;&gt; UST_IDLE),
+           iPriority  := 2,
+           tOnDelay   := T#3s,
+           xAck       := xCmdAckAlarms,
+           rNowS      := grPlcTimeS,
+           stAlarm    := gAlarms[C_ALM_LEVEL_LOW]);
+
+fbCausticLow(xCondition := rLevelCausticPct &lt; C_CHEM_LEVEL_MIN,
+             iPriority  := 3,
+             tOnDelay   := T#10s,
+             xAck       := xCmdAckAlarms,
+             rNowS      := grPlcTimeS,
+             stAlarm    := gAlarms[C_ALM_CAUSTIC_LOW]);
+
+fbAcidLow(xCondition := rLevelAcidPct &lt; C_CHEM_LEVEL_MIN,
+          iPriority  := 3,
+          tOnDelay   := T#10s,
+          xAck       := xCmdAckAlarms,
+          rNowS      := grPlcTimeS,
+          stAlarm    := gAlarms[C_ALM_ACID_LOW]);
+
+(* Twelve minutes: a cold circuit and a 1200 litre balance tank take about
+   eight to come up to a wash temperature, so anything shorter alarms on every
+   normal start. It still catches a steam valve that never opened. *)
+fbTempLow(xCondition := xCirculating AND gPhaseParams.xHeat
+                        AND (rTempReturnC &lt; gPhaseParams.rTempMin),
+          iPriority  := 2,
+          tOnDelay   := T#12m,
+          xAck       := xCmdAckAlarms,
+          rNowS      := grPlcTimeS,
+          stAlarm    := gAlarms[C_ALM_TEMP_LOW]);
+
+fbFlowLow(xCondition := xCirculating AND (rFlowSupplyM3h &lt; gPhaseParams.rFlowMin),
+          iPriority  := 2,
+          tOnDelay   := T#30s,
+          xAck       := xCmdAckAlarms,
+          rNowS      := grPlcTimeS,
+          stAlarm    := gAlarms[C_ALM_FLOW_LOW]);
+
+fbCircuitBusy(xCondition := (NOT xCircuitAvailable) AND (gUnitState &lt;&gt; UST_IDLE),
+              iPriority  := 2,
+              tOnDelay   := T#3s,
+              xAck       := xCmdAckAlarms,
+              rNowS      := grPlcTimeS,
+              stAlarm    := gAlarms[C_ALM_CIRCUIT_BUSY]);
+
+fbPhaseTimeout(xCondition := (gFailCode = FC_PHASE_TIMEOUT) OR (gFailCode = FC_CHARGE_TIMEOUT)
+                             OR (gFailCode = FC_TEMP_TIMEOUT),
+               iPriority  := 1,
+               xAck       := xCmdAckAlarms,
+               rNowS      := grPlcTimeS,
+               stAlarm    := gAlarms[C_ALM_PHASE_TIMEOUT]);
+
+fbNotClean(xCondition := gFailCode = FC_RINSE_NOT_CLEAN,
+           iPriority  := 1,
+           xAck       := xCmdAckAlarms,
+           rNowS      := grPlcTimeS,
+           stAlarm    := gAlarms[C_ALM_NOT_CLEAN]);
+
+fbNoSteam(xCondition := (NOT xSteamAvailable) AND gPhaseParams.xHeat AND gxPhaseExecute,
+          iPriority  := 3,
+          tOnDelay   := T#10s,
+          xAck       := xCmdAckAlarms,
+          rNowS      := grPlcTimeS,
+          stAlarm    := gAlarms[C_ALM_NO_STEAM]);
+
+fbCondSensor(xCondition := gxCondSensorFault,
+             iPriority  := 1,
+             xAck       := xCmdAckAlarms,
+             rNowS      := grPlcTimeS,
+             stAlarm    := gAlarms[C_ALM_COND_SENSOR]);
+
+(* ---- summary ---------------------------------------------------------- *)
+giActiveAlarms := 0;
+gxAlarmP1Active := FALSE;
+xAnyLatched := FALSE;
+xHmiAlarmHorn := FALSE;
+
+FOR i := 1 TO C_ALARM_COUNT DO
+    IF gAlarms[i].xLatched THEN
+        xAnyLatched := TRUE;
+        giActiveAlarms := giActiveAlarms + 1;
+        IF gAlarms[i].xActive AND (gAlarms[i].iPriority = 1) THEN
+            gxAlarmP1Active := TRUE;
+        END_IF
+        IF NOT gAlarms[i].xAcked THEN
+            xHmiAlarmHorn := TRUE;
+        END_IF
+        IF giFirstOut = 0 THEN
+            giFirstOut := i;
+        END_IF
+    END_IF
+END_FOR
+
+IF NOT xAnyLatched THEN
+    giFirstOut := 0;
+END_IF
+
+(* Acknowledge is momentary too and this is the last program that reads it. *)
+xCmdAckAlarms := FALSE;</xhtml:p>
+          </ST>
+        </body>
+      </pou>
+      <pou name="PRG_Control" pouType="program">
+        <interface>
+          <localVars>
+            <variable name="fbFlowPid">
+              <type>
+                <derived name="FB_Pid" />
+              </type>
+            </variable>
+            <variable name="fbTempPid">
+              <type>
+                <derived name="FB_Pid" />
+              </type>
+            </variable>
+            <variable name="fbSupplyLimit">
+              <type>
+                <derived name="FB_Pid" />
+              </type>
+            </variable>
+            <variable name="fbSupplyPump">
+              <type>
+                <derived name="FB_Pump" />
+              </type>
+            </variable>
+            <variable name="fbReturnPump">
+              <type>
+                <derived name="FB_Pump" />
+              </type>
+            </variable>
+            <variable name="xRunSupply">
+              <type>
+                <BOOL />
+              </type>
+            </variable>
+            <variable name="xRunReturn">
+              <type>
+                <BOOL />
+              </type>
+            </variable>
+            <variable name="xHeatDemand">
+              <type>
+                <BOOL />
+              </type>
+            </variable>
+            <variable name="xDoseDemand">
+              <type>
+                <BOOL />
+              </type>
+            </variable>
+          </localVars>
+        </interface>
+        <body>
+          <ST>
+            <xhtml:p>(* ---- interlocked demands --------------------------------------------- *)
+xRunSupply  := gDemand.xSupplyPump AND gxPermitRun;
+xRunReturn  := gDemand.xReturnPump AND gxPermitRun;
+xHeatDemand := gDemand.xHeat AND gxPermitHeat;
+xDoseDemand := gDemand.xDose AND gxPermitDose;
+
+(* ---- motor starters --------------------------------------------------- *)
+fbSupplyPump(xStart       := xRunSupply,
+             xInterlockOk := gxPermitRun,
+             xRunFeedback := xSupplyPumpRunning,
+             xFault       := xSupplyPumpFault,
+             xReset       := xCmdReset);
+
+fbReturnPump(xStart       := xRunReturn,
+             xInterlockOk := gxPermitRun,
+             xRunFeedback := xReturnPumpRunning,
+             xFault       := xReturnPumpFault,
+             xReset       := xCmdReset);
+
+xSupplyPumpRun := fbSupplyPump.xRun;
+xReturnPumpRun := fbReturnPump.xRun;
+
+(* ---- flow loop -------------------------------------------------------- *)
+fbFlowPid(xEnable := fbSupplyPump.xRun,
+          rPv     := rFlowSupplyM3h,
+          rSp     := gDemand.rFlowSp,
+          rKp     := 3.0,
+          rTi     := 8.0,
+          rOutMin := C_PUMP_SPEED_MIN,
+          rOutMax := C_PUMP_SPEED_MAX,
+          rCycleS := C_CYCLE_S);
+
+IF fbSupplyPump.xRun THEN
+    rSupplyPumpSpeedPct := fbFlowPid.rOut;
+ELSE
+    rSupplyPumpSpeedPct := 0.0;
+END_IF
+
+(* ---- temperature loop -------------------------------------------------- *)
+(* The controlled variable is the return temperature, not the supply. The
+   recipe specifies a temperature at the soil and the coldest point of the
+   circuit is the one that has to reach it; controlling the supply instead
+   throttles the steam as soon as one pass through the plate pack looks hot
+   enough and the loop then takes three times as long to bring the balance
+   tank up.
+
+   Tuning is lambda tuning for an integrator with dead time: the circuit holds
+   450 litres, so at 18 m3/h a change at the plate pack takes about 90 seconds
+   to reach the return element. Kp 5 %/K, Ti 600 s. *)
+fbTempPid(xEnable := xHeatDemand,
+          rPv     := rTempReturnC,
+          rSp     := gDemand.rTempSp,
+          rKp     := 5.0,
+          rTi     := 600.0,
+          rOutMin := 0.0,
+          rOutMax := 100.0,
+          rCycleS := C_CYCLE_S);
+
+(* Override: a proportional-only high limit on the plate-pack outlet, low
+   selected against the main loop. Proportional only on purpose, because an
+   integrator on the losing half of a selector winds up. *)
+fbSupplyLimit(xEnable := xHeatDemand,
+              rPv     := rTempSupplyC,
+              rSp     := C_SUPPLY_TEMP_LIMIT,
+              rKp     := 25.0,
+              rTi     := 0.0,
+              rOutMin := 0.0,
+              rOutMax := 100.0,
+              rCycleS := C_CYCLE_S);
+
+xSteamIsolation := xHeatDemand;
+IF xHeatDemand THEN
+    rSteamValvePct := MIN(fbTempPid.rOut, fbSupplyLimit.rOut);
+ELSE
+    rSteamValvePct := 0.0;
+END_IF
+
+(* ---- valve matrix ----------------------------------------------------- *)
+(* Source selection. Only one inlet is ever open and the fill valve gates
+   the whole group so a phase can hold its line-up without taking liquid. *)
+xV01FreshWater     := gDemand.xFillValve AND (gDemand.eSource = SRC_FRESH);
+xV02RecoveredWater := gDemand.xFillValve AND (gDemand.eSource = SRC_RECOVERED);
+xV11CausticSupply  := gDemand.xFillValve AND (gDemand.eSource = SRC_CAUSTIC);
+xV12AcidSupply     := gDemand.xFillValve AND (gDemand.eSource = SRC_ACID);
+
+(* Dosing is concentrate trim on top of whatever the tank already holds, so it
+   is gated on the phase's dose demand rather than on the fill valve. *)
+xV03CausticDose    := xDoseDemand AND (gDemand.eSource = SRC_CAUSTIC);
+xV04AcidDose       := xDoseDemand AND (gDemand.eSource = SRC_ACID);
+
+xV08ReturnToCaustic := FALSE;
+xV10ReturnToAcid := FALSE;
+
+(* Return destination. Exactly one of these is open whenever the return pump
+   is running, so the circuit always has somewhere to discharge. *)
+xV06ReturnToDrain    := FALSE;
+xV07ReturnToBalance  := FALSE;
+xV09ReturnToRecovery := FALSE;
+
+CASE gDemand.eReturn OF
+    RET_DRAIN:
+        xV06ReturnToDrain := TRUE;
+    RET_RECOVERY:
+        xV09ReturnToRecovery := TRUE;
+    RET_CAUSTIC:
+        xV08ReturnToCaustic := TRUE;
+    RET_ACID:
+        xV10ReturnToAcid := TRUE;
+    RET_BALANCE:
+        xV07ReturnToBalance := TRUE;
+END_CASE
+
+xV05SupplyToCircuit := fbSupplyPump.xRun;</xhtml:p>
+          </ST>
+        </body>
+      </pou>
+      <pou name="PRG_Kpi" pouType="program">
+        <interface>
+          <localVars>
+            <variable name="fbFresh">
+              <type>
+                <derived name="FB_Totaliser" />
+              </type>
+            </variable>
+            <variable name="fbRecovered">
+              <type>
+                <derived name="FB_Totaliser" />
+              </type>
+            </variable>
+            <variable name="fbEffluent">
+              <type>
+                <derived name="FB_Totaliser" />
+              </type>
+            </variable>
+            <variable name="fbCaustic">
+              <type>
+                <derived name="FB_Totaliser" />
+              </type>
+            </variable>
+            <variable name="fbAcid">
+              <type>
+                <derived name="FB_Totaliser" />
+              </type>
+            </variable>
+            <variable name="fbEnergy">
+              <type>
+                <derived name="FB_Totaliser" />
+              </type>
+            </variable>
+            <variable name="rEnergyKW">
+              <type>
+                <REAL />
+              </type>
+            </variable>
+            <variable name="rSnapWater">
+              <type>
+                <REAL />
+              </type>
+            </variable>
+            <variable name="rSnapChem">
+              <type>
+                <REAL />
+              </type>
+            </variable>
+            <variable name="rSnapEnergy">
+              <type>
+                <REAL />
+              </type>
+            </variable>
+            <variable name="i">
+              <type>
+                <INT />
+              </type>
+            </variable>
+            <variable name="xAllPass">
+              <type>
+                <BOOL />
+              </type>
+            </variable>
+            <variable name="xFinalRinseOk">
+              <type>
+                <BOOL />
+              </type>
+            </variable>
+            <variable name="xUnitActive">
+              <type>
+                <BOOL />
+              </type>
+            </variable>
+          </localVars>
+        </interface>
+        <body>
+          <ST>
+            <xhtml:p>xUnitActive := (gUnitState &lt;&gt; UST_IDLE)
+               AND (gUnitState &lt;&gt; UST_COMPLETE)
+               AND (gUnitState &lt;&gt; UST_ABORTED);
+
+(* ---- instantaneous steam duty ---------------------------------------- *)
+IF xSteamIsolation AND (rTempSupplyC &gt; rTempBalanceTankC) THEN
+    rEnergyKW := rFlowSupplyM3h * 1000.0 / 3600.0 * 4.19 * (rTempSupplyC - rTempBalanceTankC);
+ELSE
+    rEnergyKW := 0.0;
+END_IF
+
+(* ---- totalisers, all reset together at the start of a batch ------------
+    Each is gated on the line-up rather than on a valve command. That
+    distinction matters more than it looks.
+
+    Make-up is bang-bang level control on a break tank, so V01 and V02 toggle
+    every scan or two. The flow transmitter is read at the top of the scan and
+    therefore reports the previous scan's flow, so gating the totaliser on the
+    valve command aliases the two signals: on the scans the valve is open the
+    meter is still reporting the scan it was shut, so the total comes out
+    about a fifth low. The source selection only changes at a phase boundary
+    and the meter reads zero when the valve is shut in any case. Gating on
+    the source and letting the low-flow cut-off reject the noise measures
+    what actually went through the meter.
+*)
+fbFresh(xEnable := gDemand.eSource = SRC_FRESH,
+        rRatePerHour := rFlowMakeupM3h * 1000.0,
+        rCutOff := 50.0,
+        rCycleS := C_CYCLE_S,
+        xReset := gxCycleReset);
+
+fbRecovered(xEnable := gDemand.eSource = SRC_RECOVERED,
+            rRatePerHour := rFlowMakeupM3h * 1000.0,
+            rCutOff := 50.0,
+            rCycleS := C_CYCLE_S,
+            xReset := gxCycleReset);
+
+fbEffluent(xEnable := xV06ReturnToDrain,
+           rRatePerHour := rFlowSupplyM3h * 1000.0,
+           rCutOff := 50.0,
+           rCycleS := C_CYCLE_S,
+           xReset := gxCycleReset);
+
+fbCaustic(xEnable := xV03CausticDose,
+          rRatePerHour := C_CAUSTIC_DOSE_LPM * 60.0,
+          rCycleS := C_CYCLE_S,
+          xReset := gxCycleReset);
+
+fbAcid(xEnable := xV04AcidDose,
+       rRatePerHour := C_ACID_DOSE_LPM * 60.0,
+       rCycleS := C_CYCLE_S,
+       xReset := gxCycleReset);
+
+fbEnergy(xEnable := xSteamIsolation,
+         rRatePerHour := rEnergyKW,
+         rCycleS := C_CYCLE_S,
+         xReset := gxCycleReset);
+
+gKpi.rFreshWaterL     := fbFresh.rTotal;
+gKpi.rRecoveredWaterL := fbRecovered.rTotal;
+gKpi.rEffluentL       := fbEffluent.rTotal;
+gKpi.rCausticL        := fbCaustic.rTotal;
+gKpi.rAcidL           := fbAcid.rTotal;
+gKpi.rEnergyKWh       := fbEnergy.rTotal;
+
+IF gxCycleReset THEN
+    grCycleElapsedS := 0.0;
+    gKpi.xVerifiedClean := FALSE;
+    rSnapWater := 0.0;
+    rSnapChem := 0.0;
+    rSnapEnergy := 0.0;
+END_IF
+
+IF xUnitActive THEN
+    grCycleElapsedS := grCycleElapsedS + C_CYCLE_S;
+END_IF
+gKpi.rCycleTimeS := grCycleElapsedS;
+
+(* ---- per-phase consumption, by difference ----------------------------- *)
+IF gxPhaseStartPulse THEN
+    rSnapWater  := fbFresh.rTotal + fbRecovered.rTotal;
+    rSnapChem   := fbCaustic.rTotal + fbAcid.rTotal;
+    rSnapEnergy := fbEnergy.rTotal;
+END_IF
+
+IF gxPhaseEndPulse AND (giPhaseIndex &gt;= 1) AND (giPhaseIndex &lt;= C_PHASE_COUNT) THEN
+    gResults[giPhaseIndex].rWaterL := fbFresh.rTotal + fbRecovered.rTotal - rSnapWater;
+    gResults[giPhaseIndex].rChemL := fbCaustic.rTotal + fbAcid.rTotal - rSnapChem;
+    gResults[giPhaseIndex].rEnergyKWh := fbEnergy.rTotal - rSnapEnergy;
+END_IF
+
+(* ---- release criteria -------------------------------------------------- *)
+(* A batch is only released if every phase that ran met its own criteria and
+   the final rinse came back as clean as the water going in. A fixed-time
+   recipe can complete without satisfying the second test and that is the
+   whole argument for the adaptive one. *)
+xAllPass := TRUE;
+FOR i := 1 TO C_PHASE_COUNT DO
+    IF gResults[i].xExecuted AND NOT gResults[i].xPass THEN
+        xAllPass := FALSE;
+    END_IF
+END_FOR
+
+xFinalRinseOk := gResults[5].xExecuted
+                 AND gResults[5].xPass
+                 AND (gResults[5].rEndConductivity &lt;= gRecipe.rRinseEndCond);
+
+IF gUnitState = UST_COMPLETE THEN
+    gKpi.xVerifiedClean := xAllPass AND xFinalRinseOk;
+END_IF
+
+(* ---- SCADA image ------------------------------------------------------- *)
+iHmiUnitState        := TO_INT(gUnitState);
+iHmiPhase            := TO_INT(gPhase);
+iHmiPhaseStep        := TO_INT(gPhaseStep);
+iHmiFailCode         := TO_INT(gFailCode);
+iHmiActiveAlarms     := giActiveAlarms;
+iHmiFirstOutAlarm    := giFirstOut;
+iHmiBatchId          := giBatchId;
+
+rHmiFreshWaterL      := gKpi.rFreshWaterL;
+rHmiRecoveredWaterL  := gKpi.rRecoveredWaterL;
+rHmiEffluentL        := gKpi.rEffluentL;
+rHmiCausticL         := gKpi.rCausticL;
+rHmiAcidL            := gKpi.rAcidL;
+rHmiEnergyKWh        := gKpi.rEnergyKWh;
+rHmiCycleTimeS       := gKpi.rCycleTimeS;
+rHmiPhaseElapsedS    := grPhaseElapsedS;
+rHmiHoldAchievedS    := grHoldAchievedS;
+rHmiConcentrationPct := grConcentrationPct;
+
+xHmiVerifiedClean    := gKpi.xVerifiedClean;
+xHmiCycleComplete    := gUnitState = UST_COMPLETE;
+xHmiCycleAborted     := gUnitState = UST_ABORTED;
+xHmiHeating          := xSteamIsolation;</xhtml:p>
+          </ST>
+        </body>
+      </pou>
+      <pou name="PRG_Safety" pouType="program">
+        <interface>
+          <localVars constant="true">
+            <variable name="C_MIN_FLOW_HEAT">
+              <type>
+                <REAL />
+              </type>
+              <initialValue>
+                <simpleValue value="8.0" />
+              </initialValue>
+            </variable>
+            <variable name="C_DRY_RUN_FLOW">
+              <type>
+                <REAL />
+              </type>
+              <initialValue>
+                <simpleValue value="2.0" />
+              </initialValue>
+            </variable>
+          </localVars>
+          <localVars>
+            <variable name="fbDryRun">
+              <type>
+                <derived name="TON" />
+              </type>
+            </variable>
+            <variable name="fbCircuitLost">
+              <type>
+                <derived name="TON" />
+              </type>
+            </variable>
+            <variable name="xChemStockOk">
+              <type>
+                <BOOL />
+              </type>
+            </variable>
+          </localVars>
+        </interface>
+        <body>
+          <ST>
+            <xhtml:p>grPlcTimeS := grPlcTimeS + C_CYCLE_S;
+
+(* A running pump moving nothing is either dry or dead-headed. Either way it
+   destroys the seal in minutes, so it is a latch-free hard stop. *)
+fbDryRun(IN := xSupplyPumpRunning AND (rFlowSupplyM3h &lt; C_DRY_RUN_FLOW), PT := T#20s);
+
+fbCircuitLost(IN := NOT xCircuitAvailable, PT := T#3s);
+
+gxSafetyTrip := (NOT xSafetyOk)
+                OR xBalanceTankLowLow
+                OR fbDryRun.Q
+                OR (gUnitState &lt;&gt; UST_IDLE AND fbCircuitLost.Q);
+
+gxPermitRun := xSafetyOk
+               AND (NOT xBalanceTankLowLow)
+               AND (NOT fbDryRun.Q)
+               AND xCircuitAvailable
+               AND (rLevelBalanceTankPct &gt; C_LEVEL_TRIP_PCT);
+
+gxPermitHeat := gxPermitRun
+                AND xSteamAvailable
+                AND xSupplyPumpRunning
+                AND (rFlowSupplyM3h &gt;= C_MIN_FLOW_HEAT);
+
+(* Only the tank the current phase is drawing from has to have stock. *)
+CASE gDemand.eSource OF
+    SRC_CAUSTIC:
+        xChemStockOk := rLevelCausticPct &gt; C_CHEM_LEVEL_MIN;
+    SRC_ACID:
+        xChemStockOk := rLevelAcidPct &gt; C_CHEM_LEVEL_MIN;
+ELSE
+    xChemStockOk := TRUE;
+END_CASE
+
+gxPermitDose := gxPermitRun AND xSupplyPumpRunning AND xChemStockOk;</xhtml:p>
+          </ST>
+        </body>
+      </pou>
+      <pou name="RinseBlankTime" pouType="function">
+        <interface>
+          <returnType>
+            <TIME />
+          </returnType>
+          <inputVars>
+            <variable name="tFloor">
+              <type>
+                <TIME />
+              </type>
+            </variable>
+            <variable name="rFlowSpM3h">
+              <type>
+                <REAL />
+              </type>
+            </variable>
+          </inputVars>
+          <localVars>
+            <variable name="rFlowLps">
+              <type>
+                <REAL />
+              </type>
+            </variable>
+            <variable name="rTurnoverS">
+              <type>
+                <REAL />
+              </type>
+            </variable>
+          </localVars>
+        </interface>
+        <body>
+          <ST>
+            <xhtml:p>rFlowLps := MAX(rFlowSpM3h, 1.0) * 1000.0 / 3600.0;
+rTurnoverS := C_RINSE_TURNOVERS * C_CIRCUIT_VOLUME_L / rFlowLps;
+RinseBlankTime := SecondsToTime(MAX(TimeToSeconds(tFloor), rTurnoverS));</xhtml:p>
+          </ST>
+        </body>
+      </pou>
+      <pou name="NextPhase" pouType="function">
+        <interface>
+          <returnType>
+            <derived name="E_Phase" />
+          </returnType>
+          <inputVars>
+            <variable name="eCurrent">
+              <type>
+                <derived name="E_Phase" />
+              </type>
+            </variable>
+            <variable name="xUseAcid">
+              <type>
+                <BOOL />
+              </type>
+            </variable>
+            <variable name="xUseSanitise">
+              <type>
+                <BOOL />
+              </type>
+            </variable>
+          </inputVars>
+        </interface>
+        <body>
+          <ST>
+            <xhtml:p>CASE eCurrent OF
+    PH_IDLE:
+        NextPhase := PH_PRE_RINSE;
+    PH_PRE_RINSE:
+        NextPhase := PH_CAUSTIC_WASH;
+    PH_CAUSTIC_WASH:
+        NextPhase := PH_INTERMEDIATE_RINSE;
+    PH_INTERMEDIATE_RINSE:
+        IF xUseAcid THEN
+            NextPhase := PH_ACID_WASH;
+        ELSE
+            NextPhase := PH_FINAL_RINSE;
+        END_IF
+    PH_ACID_WASH:
+        NextPhase := PH_FINAL_RINSE;
+    PH_FINAL_RINSE:
+        IF xUseSanitise THEN
+            NextPhase := PH_SANITISE;
+        ELSE
+            NextPhase := PH_COMPLETE;
+        END_IF
+    PH_SANITISE:
+        NextPhase := PH_COMPLETE;
+ELSE
+    NextPhase := PH_COMPLETE;
+END_CASE</xhtml:p>
+          </ST>
+        </body>
+      </pou>
+      <pou name="PRG_Sequence" pouType="program">
+        <interface>
+          <localVars>
+            <variable name="fbUnit">
+              <type>
+                <derived name="FB_UnitStateMachine" />
+              </type>
+            </variable>
+            <variable name="fbPhase">
+              <type>
+                <derived name="FB_CipPhase" />
+              </type>
+            </variable>
+            <variable name="iPhaseIndex">
+              <type>
+                <INT />
+              </type>
+            </variable>
+            <variable name="iResultIndex">
+              <type>
+                <INT />
+              </type>
+            </variable>
+            <variable name="xReadyToStart">
+              <type>
+                <BOOL />
+              </type>
+            </variable>
+            <variable name="xProcComplete">
+              <type>
+                <BOOL />
+              </type>
+            </variable>
+            <variable name="xProcFailed">
+              <type>
+                <BOOL />
+              </type>
+            </variable>
+            <variable name="xPhaseGap">
+              <type>
+                <BOOL />
+              </type>
+            </variable>
+            <variable name="xPhaseActive">
+              <type>
+                <BOOL />
+              </type>
+            </variable>
+            <variable name="xExecutePhase">
+              <type>
+                <BOOL />
+              </type>
+            </variable>
+            <variable name="ePrevPhase">
+              <type>
+                <derived name="E_Phase" />
+              </type>
+            </variable>
+          </localVars>
+        </interface>
+        <body>
+          <ST>
+            <xhtml:p>(* ---------------------------------------------------------------------- *)
+(* 1. Unit state machine                                                    *)
+(* ---------------------------------------------------------------------- *)
+xReadyToStart := (NOT gxSafetyTrip) AND xCircuitAvailable AND (NOT gxAlarmP1Active);
+
+fbUnit(xStart              := xCmdStart,
+       xHold               := xCmdHold,
+       xRestart            := xCmdRestart,
+       xAbort              := xCmdAbort,
+       xReset              := xCmdReset,
+       xReadyToStart       := xReadyToStart,
+       xProcedureComplete  := xProcComplete,
+       xProcedureFailed    := xProcFailed,
+       xSafetyTrip         := gxSafetyTrip);
+
+gUnitState := fbUnit.eState;
+
+(* ---------------------------------------------------------------------- *)
+(* 2. Start of batch                                                        *)
+(* ---------------------------------------------------------------------- *)
+gxCycleReset := FALSE;
+IF fbUnit.xStartPulse THEN
+    giBatchId := giBatchId + 1;
+    gPhase := PH_PRE_RINSE;
+    gFailCode := FC_NONE;
+    xProcComplete := FALSE;
+    xProcFailed := FALSE;
+    xPhaseGap := FALSE;
+    gxCycleReset := TRUE;
+    gxCondSensorFault := FALSE;
+    gxCondProven := FALSE;
+    FOR iPhaseIndex := 1 TO C_PHASE_COUNT DO
+        gResults[iPhaseIndex].ePhase := PH_IDLE;
+        gResults[iPhaseIndex].xExecuted := FALSE;
+        gResults[iPhaseIndex].xPass := FALSE;
+        gResults[iPhaseIndex].eFail := FC_NONE;
+        gResults[iPhaseIndex].rDurationS := 0.0;
+        gResults[iPhaseIndex].rHoldAchievedS := 0.0;
+        gResults[iPhaseIndex].rWaterL := 0.0;
+        gResults[iPhaseIndex].rChemL := 0.0;
+        gResults[iPhaseIndex].rEnergyKWh := 0.0;
+    END_FOR
+END_IF
+
+IF fbUnit.eState = UST_IDLE THEN
+    gPhase := PH_IDLE;
+    gFailCode := FC_NONE;
+END_IF
+
+(* ---------------------------------------------------------------------- *)
+(* 3. Phase parameters from the recipe                                      *)
+(* ---------------------------------------------------------------------- *)
+gPhaseParams.rFlowSp  := gRecipe.rFlowSp;
+gPhaseParams.rFlowMin := gRecipe.rFlowMin;
+gPhaseParams.tMaxPhase := gRecipe.tPhaseMax;
+gPhaseParams.tMinPhase := T#30s;
+gPhaseParams.xAdaptiveEnd := FALSE;
+gPhaseParams.rEndConductivity := gRecipe.rRinseEndCond;
+gPhaseParams.rConcSp := 0.0;
+gPhaseParams.rConcMin := 0.0;
+gPhaseParams.rConcMax := 0.0;
+gPhaseParams.rTempSp := 0.0;
+gPhaseParams.rTempMin := 0.0;
+gPhaseParams.xHeat := FALSE;
+gPhaseParams.xDose := FALSE;
+gPhaseParams.xRecirculate := FALSE;
+
+CASE gPhase OF
+
+    PH_PRE_RINSE:
+        (* Recovered final-rinse water if there is any, mains if not. This one
+           line is most of the water saving: the pre-rinse is the biggest
+           single-pass consumer in the cycle. *)
+        IF rLevelRecoveryPct &gt; 25.0 THEN
+            gPhaseParams.eSource := SRC_RECOVERED;
+        ELSE
+            gPhaseParams.eSource := SRC_FRESH;
+        END_IF
+        gPhaseParams.eReturn := RET_DRAIN;
+        gPhaseParams.tHold := gRecipe.tPreRinse;
+        gPhaseParams.tMinPhase := RinseBlankTime(gRecipe.tRinseMin, gRecipe.rFlowSp);
+        gPhaseParams.tRecover := T#20s;
+        gPhaseParams.tMaxPhase := gRecipe.tRinseMax;
+        gPhaseParams.xAdaptiveEnd := gRecipe.xAdaptive;
+        (* Gross soil removal: a looser endpoint than the final rinse. *)
+        gPhaseParams.rEndConductivity := gRecipe.rRinseEndCond * 3.0;
+
+    PH_CAUSTIC_WASH:
+        gPhaseParams.eSource := SRC_CAUSTIC;
+        gPhaseParams.eReturn := RET_CAUSTIC;
+        gPhaseParams.xRecirculate := TRUE;
+        gPhaseParams.rTempSp := gRecipe.rCausticTempSp;
+        gPhaseParams.rTempMin := gRecipe.rCausticTempMin;
+        gPhaseParams.xHeat := TRUE;
+        gPhaseParams.rConcSp := gRecipe.rCausticConcSp;
+        gPhaseParams.rConcMin := gRecipe.rCausticConcSp - 0.25;
+        gPhaseParams.rConcMax := gRecipe.rCausticConcSp + 0.50;
+        gPhaseParams.xDose := TRUE;
+        gPhaseParams.tHold := gRecipe.tCausticHold;
+        gPhaseParams.tMinPhase := T#1m;
+        gPhaseParams.tRecover := T#180s;
+
+    PH_INTERMEDIATE_RINSE:
+        gPhaseParams.eSource := SRC_FRESH;
+        gPhaseParams.eReturn := RET_DRAIN;
+        gPhaseParams.tHold := gRecipe.tIntRinse;
+        gPhaseParams.tMinPhase := RinseBlankTime(gRecipe.tRinseMin, gRecipe.rFlowSp);
+        gPhaseParams.tRecover := T#20s;
+        gPhaseParams.tMaxPhase := gRecipe.tRinseMax;
+        gPhaseParams.xAdaptiveEnd := gRecipe.xAdaptive;
+        gPhaseParams.rEndConductivity := gRecipe.rRinseEndCond * 2.0;
+
+    PH_ACID_WASH:
+        gPhaseParams.eSource := SRC_ACID;
+        gPhaseParams.eReturn := RET_ACID;
+        gPhaseParams.xRecirculate := TRUE;
+        gPhaseParams.rTempSp := gRecipe.rAcidTempSp;
+        gPhaseParams.rTempMin := gRecipe.rAcidTempMin;
+        gPhaseParams.xHeat := TRUE;
+        gPhaseParams.rConcSp := gRecipe.rAcidConcSp;
+        gPhaseParams.rConcMin := gRecipe.rAcidConcSp - 0.15;
+        gPhaseParams.rConcMax := gRecipe.rAcidConcSp + 0.35;
+        gPhaseParams.xDose := TRUE;
+        gPhaseParams.tHold := gRecipe.tAcidHold;
+        gPhaseParams.tMinPhase := T#1m;
+        gPhaseParams.tRecover := T#180s;
+
+    PH_FINAL_RINSE:
+        gPhaseParams.eSource := SRC_FRESH;
+        gPhaseParams.eReturn := RET_RECOVERY;
+        gPhaseParams.tHold := gRecipe.tFinalRinse;
+        gPhaseParams.tMinPhase := RinseBlankTime(gRecipe.tRinseMin, gRecipe.rFlowSp);
+        gPhaseParams.tRecover := T#30s;
+        gPhaseParams.tMaxPhase := gRecipe.tRinseMax;
+        gPhaseParams.xAdaptiveEnd := gRecipe.xAdaptive;
+        gPhaseParams.rEndConductivity := gRecipe.rRinseEndCond;
+
+    PH_SANITISE:
+        gPhaseParams.eSource := SRC_FRESH;
+        gPhaseParams.eReturn := RET_BALANCE;
+        gPhaseParams.xRecirculate := TRUE;
+        gPhaseParams.rTempSp := gRecipe.rSanitiseTempSp;
+        gPhaseParams.rTempMin := gRecipe.rSanitiseTempMin;
+        gPhaseParams.xHeat := TRUE;
+        gPhaseParams.tHold := gRecipe.tSanitiseHold;
+        gPhaseParams.tMinPhase := T#1m;
+        gPhaseParams.tRecover := T#30s;
+
+ELSE
+    gPhaseParams.eSource := SRC_NONE;
+    gPhaseParams.eReturn := RET_DRAIN;
+    gPhaseParams.tHold := T#0s;
+    gPhaseParams.tRecover := T#0s;
+END_CASE
+
+(* ---------------------------------------------------------------------- *)
+(* 3b. Derived measurements                                                 *)
+(* ---------------------------------------------------------------------- *)
+(* Both are computed here rather than in PRG_Control so the phase engine sees
+   this scan's values instead of the previous scan's. The transmitter already
+   compensates to 25 degC, so the calibration is a straight division. *)
+grDeltaConductivity := rConductivityReturn - rConductivitySupply;
+
+(* Strength is measured in the balance tank, not on the return line: during
+   the charge step there is no established return flow to read. *)
+CASE gPhaseParams.eSource OF
+    SRC_CAUSTIC:
+        grConcentrationPct := rConductivityTank / C_COND_K_CAUSTIC;
+        grCondFloor := 0.5 * gPhaseParams.rConcSp * C_COND_K_CAUSTIC;
+    SRC_ACID:
+        grConcentrationPct := rConductivityTank / C_COND_K_ACID;
+        grCondFloor := 0.5 * gPhaseParams.rConcSp * C_COND_K_ACID;
+ELSE
+    grConcentrationPct := 0.0;
+    grCondFloor := 0.0;
+END_CASE
+
+(* ---------------------------------------------------------------------- *)
+(* 4. Run the phase engine                                                  *)
+(* ---------------------------------------------------------------------- *)
+(* The engine stays executing through a hold so that it keeps its step, its
+   elapsed time and its verified hold time. Dropping xExecute instead would
+   look like the end of the phase and the restart would look like a fresh
+   rising edge and begin the phase again from zero. *)
+xPhaseActive := (fbUnit.xExecute OR fbUnit.xHolding)
+                AND (gPhase &lt;&gt; PH_IDLE)
+                AND (gPhase &lt;&gt; PH_COMPLETE)
+                AND (NOT xPhaseGap);
+xExecutePhase := xPhaseActive AND (NOT fbUnit.xHolding);
+
+fbPhase(xExecute     := xPhaseActive,
+        xHolding     := fbUnit.xHolding,
+        ePhase       := gPhase,
+        stParams     := gPhaseParams,
+        rTempC       := rTempReturnC,
+        rFlowM3h     := rFlowSupplyM3h,
+        rConcPct     := grConcentrationPct,
+        rDeltaCond   := grDeltaConductivity,
+        rLevelPct    := rLevelBalanceTankPct,
+        xPumpHealthy := NOT xSupplyPumpFault,
+        rCycleS      := C_CYCLE_S);
+
+gPhaseStep := fbPhase.eStep;
+gDemand := fbPhase.stDemand;
+grPhaseElapsedS := fbPhase.rElapsedS;
+grHoldAchievedS := fbPhase.rHoldAchievedS;
+gxPhaseExecute := xExecutePhase;
+gxPhaseDone := fbPhase.xDone;
+gxPhaseFailed := fbPhase.xFailed;
+
+(*
+    Plausibility check on the return conductivity element.
+
+    Every rinse endpoint rests on this one transmitter; so does the
+    release decision. The dangerous failure is not a dead reading but a
+    reading stuck at something clean: an endpoint satisfied before the
+    rinse began would pass a dirty circuit.
+
+    There is one point in the cycle where the process guarantees a large
+    signal. Circulating a wash at strength, the return line is full of
+    detergent, so the element must at some point read at least half the
+    expected value. A wash that finishes without it having done so means
+    the element is not reading the process. Nothing may be released on its
+    word.
+
+    Written as a latch rather than a timer so that it holds for any hold
+    time: a two minute wash proves the element as well as a twenty minute
+    one. Both washes precede both rinses, so the check always runs before
+    an endpoint is trusted.
+*)
+IF gxPhaseExecute
+   AND (gPhaseStep = PS_CIRCULATE)
+   AND (grCondFloor &gt; 0.0)
+   AND (rConductivityReturn &gt;= grCondFloor) THEN
+    gxCondProven := TRUE;
+END_IF
+
+(* ---------------------------------------------------------------------- *)
+(* 5. Phase transitions and the batch record                                *)
+(* ---------------------------------------------------------------------- *)
+gxPhaseStartPulse := FALSE;
+gxPhaseEndPulse := FALSE;
+xPhaseGap := FALSE;
+
+IF gPhase &lt;&gt; ePrevPhase THEN
+    ePrevPhase := gPhase;
+    IF (gPhase &lt;&gt; PH_IDLE) AND (gPhase &lt;&gt; PH_COMPLETE) THEN
+        gxPhaseStartPulse := TRUE;
+        gxCondProven := FALSE;
+    END_IF
+END_IF
+
+iResultIndex := TO_INT(gPhase);
+
+IF xExecutePhase AND fbPhase.xDone THEN
+    gResults[iResultIndex] := fbPhase.stResult;
+    gxPhaseEndPulse := TRUE;
+    giPhaseIndex := iResultIndex;
+    gPhase := NextPhase(gPhase, gRecipe.xUseAcid, gRecipe.xUseSanitise);
+    xPhaseGap := TRUE;
+END_IF
+
+IF gxPhaseEndPulse AND (grCondFloor &gt; 0.0) AND (NOT gxCondProven) THEN
+    gxCondSensorFault := TRUE;
+END_IF
+
+IF gxCondSensorFault AND (gFailCode = FC_NONE) THEN
+    gFailCode := FC_SENSOR_FAULT;
+    xProcFailed := TRUE;
+END_IF
+
+IF xExecutePhase AND fbPhase.xFailed THEN
+    gResults[iResultIndex] := fbPhase.stResult;
+    gxPhaseEndPulse := TRUE;
+    giPhaseIndex := iResultIndex;
+    gFailCode := fbPhase.eFail;
+    xProcFailed := TRUE;
+END_IF
+
+IF (gPhase = PH_COMPLETE) AND (fbUnit.eState = UST_RUNNING) THEN
+    xProcComplete := TRUE;
+END_IF
+
+IF fbUnit.xAborting AND (gFailCode = FC_NONE) THEN
+    IF gxSafetyTrip THEN
+        gFailCode := FC_SAFETY_TRIP;
+    ELSE
+        gFailCode := FC_OPERATOR_ABORT;
+    END_IF
+END_IF
+
+IF fbUnit.eState = UST_ABORTED THEN
+    xProcFailed := FALSE;    (* consumed; the state machine is already there *)
+END_IF
+
+(* Momentary commands. The edges were taken at the top of this program, so the
+   bits are cleared here and a client only ever has to set one. *)
+xCmdStart := FALSE;
+xCmdHold := FALSE;
+xCmdRestart := FALSE;
+xCmdAbort := FALSE;
+xCmdReset := FALSE;</xhtml:p>
+          </ST>
+        </body>
+      </pou>
+    </pous>
+  </types>
+  <instances>
+    <configurations>
+      <configuration name="CipSkid">
+        <resource name="CipController">
+          <task name="MainTask" interval="T#200ms" priority="1">
+            <pouInstance name="PRG_Safety_1" typeName="PRG_Safety" />
+            <pouInstance name="PRG_Sequence_1" typeName="PRG_Sequence" />
+            <pouInstance name="PRG_Control_1" typeName="PRG_Control" />
+            <pouInstance name="PRG_Alarms_1" typeName="PRG_Alarms" />
+            <pouInstance name="PRG_Kpi_1" typeName="PRG_Kpi" />
+          </task>
+        </resource>
+        <globalVars name="GVL_Cip" constant="true">
+          <variable name="C_ALARM_COUNT">
+            <type>
+              <INT />
+            </type>
+            <initialValue>
+              <simpleValue value="13" />
+            </initialValue>
+          </variable>
+          <variable name="C_PHASE_COUNT">
+            <type>
+              <INT />
+            </type>
+            <initialValue>
+              <simpleValue value="6" />
+            </initialValue>
+          </variable>
+          <variable name="C_ALM_SAFETY">
+            <type>
+              <INT />
+            </type>
+            <initialValue>
+              <simpleValue value="1" />
+            </initialValue>
+          </variable>
+          <variable name="C_ALM_SUPPLY_PUMP">
+            <type>
+              <INT />
+            </type>
+            <initialValue>
+              <simpleValue value="2" />
+            </initialValue>
+          </variable>
+          <variable name="C_ALM_RETURN_PUMP">
+            <type>
+              <INT />
+            </type>
+            <initialValue>
+              <simpleValue value="3" />
+            </initialValue>
+          </variable>
+          <variable name="C_ALM_LEVEL_LOW">
+            <type>
+              <INT />
+            </type>
+            <initialValue>
+              <simpleValue value="4" />
+            </initialValue>
+          </variable>
+          <variable name="C_ALM_CAUSTIC_LOW">
+            <type>
+              <INT />
+            </type>
+            <initialValue>
+              <simpleValue value="5" />
+            </initialValue>
+          </variable>
+          <variable name="C_ALM_ACID_LOW">
+            <type>
+              <INT />
+            </type>
+            <initialValue>
+              <simpleValue value="6" />
+            </initialValue>
+          </variable>
+          <variable name="C_ALM_TEMP_LOW">
+            <type>
+              <INT />
+            </type>
+            <initialValue>
+              <simpleValue value="7" />
+            </initialValue>
+          </variable>
+          <variable name="C_ALM_FLOW_LOW">
+            <type>
+              <INT />
+            </type>
+            <initialValue>
+              <simpleValue value="8" />
+            </initialValue>
+          </variable>
+          <variable name="C_ALM_CIRCUIT_BUSY">
+            <type>
+              <INT />
+            </type>
+            <initialValue>
+              <simpleValue value="9" />
+            </initialValue>
+          </variable>
+          <variable name="C_ALM_PHASE_TIMEOUT">
+            <type>
+              <INT />
+            </type>
+            <initialValue>
+              <simpleValue value="10" />
+            </initialValue>
+          </variable>
+          <variable name="C_ALM_NOT_CLEAN">
+            <type>
+              <INT />
+            </type>
+            <initialValue>
+              <simpleValue value="11" />
+            </initialValue>
+          </variable>
+          <variable name="C_ALM_NO_STEAM">
+            <type>
+              <INT />
+            </type>
+            <initialValue>
+              <simpleValue value="12" />
+            </initialValue>
+          </variable>
+          <variable name="C_ALM_COND_SENSOR">
+            <type>
+              <INT />
+            </type>
+            <initialValue>
+              <simpleValue value="13" />
+            </initialValue>
+          </variable>
+          <variable name="C_BALANCE_TANK_L">
+            <type>
+              <REAL />
+            </type>
+            <initialValue>
+              <simpleValue value="1200.0" />
+            </initialValue>
+          </variable>
+          <variable name="C_CIRCUIT_VOLUME_L">
+            <type>
+              <REAL />
+            </type>
+            <initialValue>
+              <simpleValue value="450.0" />
+            </initialValue>
+          </variable>
+          <variable name="C_RINSE_TURNOVERS">
+            <type>
+              <REAL />
+            </type>
+            <initialValue>
+              <simpleValue value="1.5" />
+            </initialValue>
+          </variable>
+          <variable name="C_FILL_TARGET_PCT">
+            <type>
+              <REAL />
+            </type>
+            <initialValue>
+              <simpleValue value="60.0" />
+            </initialValue>
+          </variable>
+          <variable name="C_RINSE_LEVEL_PCT">
+            <type>
+              <REAL />
+            </type>
+            <initialValue>
+              <simpleValue value="13.0" />
+            </initialValue>
+          </variable>
+          <variable name="C_PUMP_START_PCT">
+            <type>
+              <REAL />
+            </type>
+            <initialValue>
+              <simpleValue value="10.0" />
+            </initialValue>
+          </variable>
+          <variable name="C_LEVEL_TRIP_PCT">
+            <type>
+              <REAL />
+            </type>
+            <initialValue>
+              <simpleValue value="7.0" />
+            </initialValue>
+          </variable>
+          <variable name="C_CHEM_LEVEL_MIN">
+            <type>
+              <REAL />
+            </type>
+            <initialValue>
+              <simpleValue value="15.0" />
+            </initialValue>
+          </variable>
+          <variable name="C_COND_K_CAUSTIC">
+            <type>
+              <REAL />
+            </type>
+            <initialValue>
+              <simpleValue value="47.0" />
+            </initialValue>
+          </variable>
+          <variable name="C_COND_K_ACID">
+            <type>
+              <REAL />
+            </type>
+            <initialValue>
+              <simpleValue value="45.0" />
+            </initialValue>
+          </variable>
+          <variable name="C_CAUSTIC_DOSE_LPM">
+            <type>
+              <REAL />
+            </type>
+            <initialValue>
+              <simpleValue value="30.0" />
+            </initialValue>
+          </variable>
+          <variable name="C_ACID_DOSE_LPM">
+            <type>
+              <REAL />
+            </type>
+            <initialValue>
+              <simpleValue value="20.0" />
+            </initialValue>
+          </variable>
+          <variable name="C_TEMP_TOL">
+            <type>
+              <REAL />
+            </type>
+            <initialValue>
+              <simpleValue value="1.0" />
+            </initialValue>
+          </variable>
+          <variable name="C_SUPPLY_TEMP_LIMIT">
+            <type>
+              <REAL />
+            </type>
+            <initialValue>
+              <simpleValue value="90.0" />
+            </initialValue>
+          </variable>
+          <variable name="C_CYCLE_S">
+            <type>
+              <REAL />
+            </type>
+            <initialValue>
+              <simpleValue value="0.2" />
+            </initialValue>
+          </variable>
+          <variable name="C_PUMP_SPEED_MIN">
+            <type>
+              <REAL />
+            </type>
+            <initialValue>
+              <simpleValue value="25.0" />
+            </initialValue>
+          </variable>
+          <variable name="C_PUMP_SPEED_MAX">
+            <type>
+              <REAL />
+            </type>
+            <initialValue>
+              <simpleValue value="100.0" />
+            </initialValue>
+          </variable>
+        </globalVars>
+        <globalVars name="GVL_Cip_1">
+          <variable name="gRecipe">
+            <type>
+              <derived name="ST_Recipe" />
+            </type>
+          </variable>
+          <variable name="gUnitState">
+            <type>
+              <derived name="E_UnitState" />
+            </type>
+          </variable>
+          <variable name="gPhase">
+            <type>
+              <derived name="E_Phase" />
+            </type>
+          </variable>
+          <variable name="gPhaseStep">
+            <type>
+              <derived name="E_PhaseStep" />
+            </type>
+          </variable>
+          <variable name="gFailCode">
+            <type>
+              <derived name="E_FailCode" />
+            </type>
+          </variable>
+          <variable name="gPhaseParams">
+            <type>
+              <derived name="ST_PhaseParams" />
+            </type>
+          </variable>
+          <variable name="gDemand">
+            <type>
+              <derived name="ST_Demand" />
+            </type>
+          </variable>
+          <variable name="gResults">
+            <type>
+              <array>
+                <dimension lower="1" upper="6" />
+                <baseType>
+                  <derived name="ST_PhaseResult" />
+                </baseType>
+              </array>
+            </type>
+          </variable>
+          <variable name="gKpi">
+            <type>
+              <derived name="ST_Kpi" />
+            </type>
+          </variable>
+          <variable name="giBatchId">
+            <type>
+              <INT />
+            </type>
+          </variable>
+          <variable name="gxSafetyTrip">
+            <type>
+              <BOOL />
+            </type>
+          </variable>
+          <variable name="gxPermitRun">
+            <type>
+              <BOOL />
+            </type>
+          </variable>
+          <variable name="gxPermitHeat">
+            <type>
+              <BOOL />
+            </type>
+          </variable>
+          <variable name="gxPermitDose">
+            <type>
+              <BOOL />
+            </type>
+          </variable>
+          <variable name="gxHoldRequest">
+            <type>
+              <BOOL />
+            </type>
+          </variable>
+          <variable name="gxAbortRequest">
+            <type>
+              <BOOL />
+            </type>
+          </variable>
+          <variable name="gxPhaseExecute">
+            <type>
+              <BOOL />
+            </type>
+          </variable>
+          <variable name="gxPhaseDone">
+            <type>
+              <BOOL />
+            </type>
+          </variable>
+          <variable name="gxPhaseFailed">
+            <type>
+              <BOOL />
+            </type>
+          </variable>
+          <variable name="gxCycleReset">
+            <type>
+              <BOOL />
+            </type>
+          </variable>
+          <variable name="gxPhaseStartPulse">
+            <type>
+              <BOOL />
+            </type>
+          </variable>
+          <variable name="gxPhaseEndPulse">
+            <type>
+              <BOOL />
+            </type>
+          </variable>
+          <variable name="giPhaseIndex">
+            <type>
+              <INT />
+            </type>
+          </variable>
+          <variable name="grConcentrationPct">
+            <type>
+              <REAL />
+            </type>
+          </variable>
+          <variable name="grDeltaConductivity">
+            <type>
+              <REAL />
+            </type>
+          </variable>
+          <variable name="grCycleElapsedS">
+            <type>
+              <REAL />
+            </type>
+          </variable>
+          <variable name="grPhaseElapsedS">
+            <type>
+              <REAL />
+            </type>
+          </variable>
+          <variable name="grHoldAchievedS">
+            <type>
+              <REAL />
+            </type>
+          </variable>
+          <variable name="grPlcTimeS">
+            <type>
+              <REAL />
+            </type>
+          </variable>
+          <variable name="grCondFloor">
+            <type>
+              <REAL />
+            </type>
+          </variable>
+          <variable name="gxCondSensorFault">
+            <type>
+              <BOOL />
+            </type>
+          </variable>
+          <variable name="gxCondProven">
+            <type>
+              <BOOL />
+            </type>
+          </variable>
+          <variable name="gAlarms">
+            <type>
+              <array>
+                <dimension lower="1" upper="13" />
+                <baseType>
+                  <derived name="ST_Alarm" />
+                </baseType>
+              </array>
+            </type>
+          </variable>
+          <variable name="giFirstOut">
+            <type>
+              <INT />
+            </type>
+          </variable>
+          <variable name="giActiveAlarms">
+            <type>
+              <INT />
+            </type>
+          </variable>
+          <variable name="gxAlarmP1Active">
+            <type>
+              <BOOL />
+            </type>
+          </variable>
+        </globalVars>
+        <globalVars name="GVL_Io">
+          <variable name="xSafetyOk" address="%IX0.0">
+            <type>
+              <BOOL />
+            </type>
+          </variable>
+          <variable name="xSupplyPumpRunning" address="%IX0.1">
+            <type>
+              <BOOL />
+            </type>
+          </variable>
+          <variable name="xReturnPumpRunning" address="%IX0.2">
+            <type>
+              <BOOL />
+            </type>
+          </variable>
+          <variable name="xSupplyPumpFault" address="%IX0.3">
+            <type>
+              <BOOL />
+            </type>
+          </variable>
+          <variable name="xReturnPumpFault" address="%IX0.4">
+            <type>
+              <BOOL />
+            </type>
+          </variable>
+          <variable name="xCircuitAvailable" address="%IX0.5">
+            <type>
+              <BOOL />
+            </type>
+          </variable>
+          <variable name="xSteamAvailable" address="%IX0.6">
+            <type>
+              <BOOL />
+            </type>
+          </variable>
+          <variable name="xBalanceTankLowLow" address="%IX0.7">
+            <type>
+              <BOOL />
+            </type>
+          </variable>
+          <variable name="xCmdStart" address="%MX0.0">
+            <type>
+              <BOOL />
+            </type>
+          </variable>
+          <variable name="xCmdHold" address="%MX0.1">
+            <type>
+              <BOOL />
+            </type>
+          </variable>
+          <variable name="xCmdRestart" address="%MX0.2">
+            <type>
+              <BOOL />
+            </type>
+          </variable>
+          <variable name="xCmdAbort" address="%MX0.3">
+            <type>
+              <BOOL />
+            </type>
+          </variable>
+          <variable name="xCmdReset" address="%MX0.4">
+            <type>
+              <BOOL />
+            </type>
+          </variable>
+          <variable name="xCmdAckAlarms" address="%MX0.5">
+            <type>
+              <BOOL />
+            </type>
+          </variable>
+          <variable name="rLevelBalanceTankPct" address="%ID0">
+            <type>
+              <REAL />
+            </type>
+          </variable>
+          <variable name="rTempSupplyC" address="%ID1">
+            <type>
+              <REAL />
+            </type>
+          </variable>
+          <variable name="rTempReturnC" address="%ID2">
+            <type>
+              <REAL />
+            </type>
+          </variable>
+          <variable name="rFlowSupplyM3h" address="%ID3">
+            <type>
+              <REAL />
+            </type>
+          </variable>
+          <variable name="rConductivityReturn" address="%ID4">
+            <type>
+              <REAL />
+            </type>
+          </variable>
+          <variable name="rPressureSupplyBar" address="%ID5">
+            <type>
+              <REAL />
+            </type>
+          </variable>
+          <variable name="rLevelCausticPct" address="%ID6">
+            <type>
+              <REAL />
+            </type>
+          </variable>
+          <variable name="rLevelAcidPct" address="%ID7">
+            <type>
+              <REAL />
+            </type>
+          </variable>
+          <variable name="rLevelRecoveryPct" address="%ID8">
+            <type>
+              <REAL />
+            </type>
+          </variable>
+          <variable name="rConductivitySupply" address="%ID9">
+            <type>
+              <REAL />
+            </type>
+          </variable>
+          <variable name="rFlowMakeupM3h" address="%ID10">
+            <type>
+              <REAL />
+            </type>
+          </variable>
+          <variable name="rTempBalanceTankC" address="%ID11">
+            <type>
+              <REAL />
+            </type>
+          </variable>
+          <variable name="rConductivityTank" address="%ID12">
+            <type>
+              <REAL />
+            </type>
+          </variable>
+          <variable name="xV01FreshWater" address="%QX2.0">
+            <type>
+              <BOOL />
+            </type>
+          </variable>
+          <variable name="xV02RecoveredWater" address="%QX2.1">
+            <type>
+              <BOOL />
+            </type>
+          </variable>
+          <variable name="xV03CausticDose" address="%QX2.2">
+            <type>
+              <BOOL />
+            </type>
+          </variable>
+          <variable name="xV04AcidDose" address="%QX2.3">
+            <type>
+              <BOOL />
+            </type>
+          </variable>
+          <variable name="xV05SupplyToCircuit" address="%QX2.4">
+            <type>
+              <BOOL />
+            </type>
+          </variable>
+          <variable name="xV06ReturnToDrain" address="%QX2.5">
+            <type>
+              <BOOL />
+            </type>
+          </variable>
+          <variable name="xV07ReturnToBalance" address="%QX2.6">
+            <type>
+              <BOOL />
+            </type>
+          </variable>
+          <variable name="xV08ReturnToCaustic" address="%QX2.7">
+            <type>
+              <BOOL />
+            </type>
+          </variable>
+          <variable name="xV09ReturnToRecovery" address="%QX3.0">
+            <type>
+              <BOOL />
+            </type>
+          </variable>
+          <variable name="xV10ReturnToAcid" address="%QX3.1">
+            <type>
+              <BOOL />
+            </type>
+          </variable>
+          <variable name="xSupplyPumpRun" address="%QX3.2">
+            <type>
+              <BOOL />
+            </type>
+          </variable>
+          <variable name="xReturnPumpRun" address="%QX3.3">
+            <type>
+              <BOOL />
+            </type>
+          </variable>
+          <variable name="xSteamIsolation" address="%QX3.4">
+            <type>
+              <BOOL />
+            </type>
+          </variable>
+          <variable name="xV11CausticSupply" address="%QX3.5">
+            <type>
+              <BOOL />
+            </type>
+          </variable>
+          <variable name="xV12AcidSupply" address="%QX3.6">
+            <type>
+              <BOOL />
+            </type>
+          </variable>
+          <variable name="rSupplyPumpSpeedPct" address="%QD16">
+            <type>
+              <REAL />
+            </type>
+          </variable>
+          <variable name="rSteamValvePct" address="%QD17">
+            <type>
+              <REAL />
+            </type>
+          </variable>
+          <variable name="iHmiUnitState" address="%MW0">
+            <type>
+              <INT />
+            </type>
+          </variable>
+          <variable name="iHmiPhase" address="%MW1">
+            <type>
+              <INT />
+            </type>
+          </variable>
+          <variable name="iHmiPhaseStep" address="%MW2">
+            <type>
+              <INT />
+            </type>
+          </variable>
+          <variable name="iHmiFailCode" address="%MW3">
+            <type>
+              <INT />
+            </type>
+          </variable>
+          <variable name="iHmiActiveAlarms" address="%MW4">
+            <type>
+              <INT />
+            </type>
+          </variable>
+          <variable name="iHmiFirstOutAlarm" address="%MW5">
+            <type>
+              <INT />
+            </type>
+          </variable>
+          <variable name="iHmiBatchId" address="%MW6">
+            <type>
+              <INT />
+            </type>
+          </variable>
+          <variable name="rHmiFreshWaterL" address="%MD10">
+            <type>
+              <REAL />
+            </type>
+          </variable>
+          <variable name="rHmiRecoveredWaterL" address="%MD11">
+            <type>
+              <REAL />
+            </type>
+          </variable>
+          <variable name="rHmiEffluentL" address="%MD12">
+            <type>
+              <REAL />
+            </type>
+          </variable>
+          <variable name="rHmiCausticL" address="%MD13">
+            <type>
+              <REAL />
+            </type>
+          </variable>
+          <variable name="rHmiAcidL" address="%MD14">
+            <type>
+              <REAL />
+            </type>
+          </variable>
+          <variable name="rHmiEnergyKWh" address="%MD15">
+            <type>
+              <REAL />
+            </type>
+          </variable>
+          <variable name="rHmiCycleTimeS" address="%MD16">
+            <type>
+              <REAL />
+            </type>
+          </variable>
+          <variable name="rHmiPhaseElapsedS" address="%MD17">
+            <type>
+              <REAL />
+            </type>
+          </variable>
+          <variable name="rHmiHoldAchievedS" address="%MD18">
+            <type>
+              <REAL />
+            </type>
+          </variable>
+          <variable name="rHmiConcentrationPct" address="%MD19">
+            <type>
+              <REAL />
+            </type>
+          </variable>
+          <variable name="xHmiVerifiedClean" address="%MX30.0">
+            <type>
+              <BOOL />
+            </type>
+          </variable>
+          <variable name="xHmiCycleComplete" address="%MX30.1">
+            <type>
+              <BOOL />
+            </type>
+          </variable>
+          <variable name="xHmiCycleAborted" address="%MX30.2">
+            <type>
+              <BOOL />
+            </type>
+          </variable>
+          <variable name="xHmiAlarmHorn" address="%MX30.3">
+            <type>
+              <BOOL />
+            </type>
+          </variable>
+          <variable name="xHmiHeating" address="%MX30.4">
+            <type>
+              <BOOL />
+            </type>
+          </variable>
+        </globalVars>
+      </configuration>
+    </configurations>
+  </instances>
+</project>

@@ -3,7 +3,7 @@
 
 PYTHON ?= python
 
-.PHONY: help setup lint test test-all cycle experiments verify hmi io-map clean
+.PHONY: help setup lint test test-all cycle experiments verify hmi io-map plcopen rusty crosscheck clean
 
 help:
 	@echo "make setup        install pytest and ruff (nothing else is needed)"
@@ -15,6 +15,9 @@ help:
 	@echo "make verify       re-run one committed cell and check it reproduces"
 	@echo "make hmi          Modbus TCP on :5020 and the operator page on :8080"
 	@echo "make io-map       regenerate docs/io_map.md from the ST declarations"
+	@echo "make plcopen      regenerate export/plcopen/cip_skid.xml"
+	@echo "make rusty        compile plc/ with RuSTy (Linux; see scripts/rusty)"
+	@echo "make crosscheck   the same scenarios on the interpreter and the RuSTy build"
 
 setup:
 	$(PYTHON) -m pip install -r requirements-dev.txt
@@ -42,6 +45,18 @@ hmi:
 
 io-map:
 	$(PYTHON) scripts/render_io_map.py
+
+plcopen:
+	$(PYTHON) scripts/export_plcopen.py
+
+# RUSTY_STDLIB is the directory scripts/rusty/build_stdlib.sh wrote to.
+RUSTY_STDLIB ?= $(HOME)/rusty/stdlib
+
+rusty:
+	scripts/rusty/compile_plc.sh $(RUSTY_STDLIB) build/rusty
+
+crosscheck:
+	$(PYTHON) scripts/crosscheck_compiled.py
 
 clean:
 	rm -rf .pytest_cache .ruff_cache
